@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg-primary: #f5f7fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #eef2f7;
+
+  --text-primary: #101828;
+  --text-secondary: #667085;
+  --text-muted: #98a2b3;
+
+  --border-color: #e4e7ec;
+
+  --primary: #155eef;
+  --primary-dark: #0040c1;
+  --primary-soft: rgba(21, 94, 239, 0.08);
+
+  --success: #12b76a;
+  --warning: #f79009;
+  --danger: #f04438;
+  --info: #06aed4;
+
+  --shadow-xs:
+    0 1px 2px rgba(16, 24, 40, 0.04);
+
+  --shadow-sm:
+    0 4px 12px rgba(16, 24, 40, 0.06);
+
+  --shadow-md:
+    0 12px 32px rgba(16, 24, 40, 0.08);
+
+  --shadow-lg:
+    0 24px 60px rgba(16, 24, 40, 0.12);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #080d18;
+  --bg-secondary: #101827;
+  --bg-tertiary: #172235;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #98a2b3;
+  --text-muted: #667085;
+
+  --border-color: #253247;
+
+  --primary: #528bff;
+  --primary-dark: #84adff;
+  --primary-soft: rgba(82, 139, 255, 0.12);
+
+  --success: #32d583;
+  --warning: #fdb022;
+  --danger: #f97066;
+  --info: #36bffa;
+
+  --shadow-xs:
+    0 1px 2px rgba(0, 0, 0, 0.25);
+
+  --shadow-sm:
+    0 4px 15px rgba(0, 0, 0, 0.22);
+
+  --shadow-md:
+    0 12px 35px rgba(0, 0, 0, 0.28);
+
+  --shadow-lg:
+    0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

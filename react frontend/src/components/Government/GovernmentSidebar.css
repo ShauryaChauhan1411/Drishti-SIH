@@ -1,0 +1,395 @@
+/* ========================================
+   GOVERNMENT SIDEBAR
+======================================== */
+
+.gov-sidebar {
+  width: 255px;
+  height: calc(100vh - 76px);
+
+  position: fixed;
+  left: 0;
+  top: 76px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 22px 15px;
+
+  background: var(--bg-secondary);
+
+  border-right: 1px solid var(--border-color);
+
+  z-index: 900;
+
+  overflow-y: auto;
+}
+
+
+/* ========================================
+   SIDEBAR BRAND
+======================================== */
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 8px 9px 25px;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-logo {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      #1745b5
+    );
+
+  color: white;
+
+  box-shadow:
+    0 8px 22px rgba(37, 99, 235, 0.22);
+}
+
+.sidebar-brand strong {
+  display: block;
+
+  color: var(--text-primary);
+
+  font-size: 14px;
+
+  font-weight: 850;
+
+  letter-spacing: -0.2px;
+}
+
+.sidebar-brand span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--text-secondary);
+
+  font-size: 9px;
+
+  font-weight: 650;
+}
+
+
+/* ========================================
+   NAVIGATION
+======================================== */
+
+.sidebar-nav {
+  flex: 1;
+
+  padding-top: 25px;
+}
+
+.nav-title {
+  margin: 0 9px 9px;
+
+  color: var(--text-secondary);
+
+  font-size: 9px;
+
+  font-weight: 850;
+
+  letter-spacing: 1px;
+}
+
+
+/* ========================================
+   NAVIGATION BUTTON
+======================================== */
+
+.nav-item {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 4px;
+
+  padding: 11px 12px;
+
+  border: 1px solid transparent;
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* ICON */
+
+.nav-item svg {
+  flex-shrink: 0;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* ========================================
+   HOVER
+======================================== */
+
+.nav-item:hover {
+  background: var(--bg-primary);
+
+  color: var(--text-primary);
+
+  border-color: var(--border-color);
+
+  transform: translateX(2px);
+}
+
+.nav-item:hover svg {
+  color: var(--primary);
+
+  transform: scale(1.05);
+}
+
+
+/* ========================================
+   ACTIVE NAVIGATION
+======================================== */
+
+.nav-item.active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.16),
+      rgba(37, 99, 235, 0.05)
+    );
+
+  border-color:
+    rgba(37, 99, 235, 0.22);
+
+  color: var(--primary);
+
+  box-shadow:
+    inset 3px 0 0 var(--primary),
+    0 5px 20px rgba(37, 99, 235, 0.07);
+}
+
+.nav-item.active svg {
+  color: var(--primary);
+}
+
+
+/* ========================================
+   SIDEBAR SCROLLBAR
+======================================== */
+
+.gov-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.gov-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gov-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+
+  border-radius: 10px;
+}
+
+.gov-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+
+/* ========================================
+   LOGOUT BUTTON
+======================================== */
+
+.logout-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 15px;
+
+  padding: 11px 12px;
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 10px;
+
+  background: var(--bg-primary);
+
+  color: var(--text-secondary);
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.logout-button:hover {
+  color: #dc2626;
+
+  border-color:
+    rgba(220, 38, 38, 0.25);
+
+  background:
+    rgba(220, 38, 38, 0.04);
+
+  transform: translateX(2px);
+}
+
+.logout-button svg {
+  flex-shrink: 0;
+}
+
+
+/* ========================================
+   DARK MODE
+======================================== */
+
+[data-theme="dark"] .gov-sidebar {
+  background: var(--bg-secondary);
+
+  border-right-color: var(--border-color);
+
+  box-shadow:
+    8px 0 30px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .nav-item:hover {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .nav-item.active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.20),
+      rgba(37, 99, 235, 0.06)
+    );
+
+  box-shadow:
+    inset 3px 0 0 var(--primary),
+    0 5px 25px rgba(37, 99, 235, 0.10);
+}
+
+[data-theme="dark"] .logout-button {
+  background: var(--bg-primary);
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 850px) {
+
+  .gov-sidebar {
+    width: 215px;
+  }
+
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 700px) {
+
+  .gov-sidebar {
+    width: 255px;
+
+    height: calc(100vh - 70px);
+
+    top: 70px;
+
+    transform: translateX(-100%);
+
+    transition:
+      transform 0.3s ease;
+
+    box-shadow:
+      10px 0 30px rgba(15, 23, 42, 0.12);
+  }
+
+}
+
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+.gov-sidebar {
+  width: 255px;
+  height: calc(100vh - 76px);
+
+  position: fixed;
+  left: 0;
+  top: 76px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 22px 15px;
+
+  background: var(--bg-secondary);
+
+  border-right: 1px solid var(--border-color);
+
+  z-index: 900;
+
+  overflow-y: auto;
+}

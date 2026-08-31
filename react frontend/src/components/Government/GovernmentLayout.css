@@ -1,0 +1,360 @@
+/* =========================================
+   GOVERNMENT LAYOUT
+========================================= */
+
+.government-layout {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+
+/* =========================================
+   FIXED TOPBAR
+========================================= */
+
+.government-topbar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 28px;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--bg-secondary) 92%,
+      transparent
+    );
+
+  border-bottom: 1px solid var(--border-color);
+
+  backdrop-filter: blur(20px);
+
+  z-index: 2000;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+.government-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.government-topbar-logo {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      #1745b5
+    );
+
+  color: white;
+
+  box-shadow:
+    0 0 20px rgba(37, 99, 235, 0.28);
+}
+
+.government-brand-text strong {
+  display: block;
+
+  color: var(--text-primary);
+
+  font-size: 15px;
+  font-weight: 900;
+
+  letter-spacing: -0.3px;
+}
+
+.government-brand-text span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--text-secondary);
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.government-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+/* =========================================
+   SYSTEM LIVE
+========================================= */
+
+.government-system-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 13px;
+
+  border: 1px solid rgba(22, 163, 74, 0.25);
+
+  border-radius: 999px;
+
+  background:
+    rgba(22, 163, 74, 0.07);
+
+  color: #16a34a;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.4px;
+}
+
+.government-system-status span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  box-shadow:
+    0 0 0 4px rgba(34, 197, 94, 0.12),
+    0 0 12px rgba(34, 197, 94, 0.65);
+}
+
+
+/* =========================================
+   TOPBAR BUTTON
+========================================= */
+
+.government-topbar-button {
+  position: relative;
+
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 11px;
+
+  background: var(--bg-primary);
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.government-topbar-button:hover {
+  color: var(--primary);
+
+  border-color: var(--primary);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 18px rgba(37, 99, 235, 0.18);
+}
+
+
+/* notification badge */
+
+.government-topbar-button b {
+  position: absolute;
+
+  top: -4px;
+  right: -4px;
+
+  width: 16px;
+  height: 16px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-size: 8px;
+
+  box-shadow:
+    0 0 10px rgba(239, 68, 68, 0.45);
+}
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+.government-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding-left: 5px;
+}
+
+.government-profile-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background:
+    var(--primary-soft);
+
+  color: var(--primary);
+
+  font-size: 10px;
+  font-weight: 900;
+
+  border: 1px solid
+    rgba(37, 99, 235, 0.15);
+}
+
+.government-profile strong {
+  display: block;
+
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.government-profile span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--text-secondary);
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.government-layout-main {
+  min-height: 100vh;
+
+  margin-left: 255px;
+
+  padding-top: 76px;
+
+  width: calc(100% - 255px);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+[data-theme="dark"] .government-topbar {
+  background:
+    rgba(10, 14, 20, 0.88);
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .government-layout-main {
+    margin-left: 215px;
+
+    width: calc(100% - 215px);
+  }
+
+  .government-profile {
+    display: none;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .government-topbar {
+    padding: 0 16px;
+  }
+
+  .government-system-status {
+    display: none;
+  }
+
+  .government-layout-main {
+    margin-left: 0;
+
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 450px) {
+
+  .government-topbar {
+    height: 70px;
+  }
+
+  .government-layout-main {
+    padding-top: 70px;
+  }
+
+  .government-brand-text span {
+    display: none;
+  }
+
+  .government-brand-text strong {
+    font-size: 13px;
+  }
+
+}
