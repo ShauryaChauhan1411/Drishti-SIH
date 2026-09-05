@@ -14,8 +14,8 @@
 ========================================= */
 
 .verification-header {
-  min-height: 88px;
-  padding: 18px 38px;
+  min-height: 82px;
+  padding: 16px 38px;
 
   display: flex;
   align-items: center;
@@ -23,36 +23,30 @@
 
   border-bottom: 1px solid var(--border-color);
 
-  background:
-    linear-gradient(
-      180deg,
-      var(--bg-secondary),
-      var(--bg-primary)
-    );
+  background: var(--bg-secondary);
 }
 
 .verification-header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 15px;
 }
 
 .verification-back {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
 
   display: grid;
   place-items: center;
 
   border: 1px solid var(--border-color);
-  border-radius: 11px;
+  border-radius: 10px;
 
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   color: var(--text-primary);
 
   cursor: pointer;
-
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .verification-back:hover {
@@ -66,27 +60,29 @@
 
   color: var(--primary);
 
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 10px;
+  font-weight: 800;
 
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 
 .verification-header h1 {
-  margin-top: 5px;
+  margin-top: 4px;
 
-  font-size: 21px;
-  font-weight: 850;
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
 
-  letter-spacing: -0.6px;
+  letter-spacing: -0.5px;
 }
 
 .verification-header p {
-  margin-top: 4px;
+  margin-top: 5px;
 
   color: var(--text-secondary);
 
-  font-size: 10px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 
@@ -95,42 +91,36 @@
 ========================================= */
 
 .verification-status {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 
-  padding: 8px 11px;
+  padding: 9px 13px;
 
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.25);
   border-radius: 999px;
 
   color: #b45309;
 
-  background: rgba(245, 158, 11, 0.07);
+  background: rgba(245, 158, 11, 0.08);
 
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 10px;
+  font-weight: 800;
 
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
 }
 
 .verification-status span {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
 
   border-radius: 50%;
 
   background: #f59e0b;
 
-  box-shadow:
-    0 0 0 4px rgba(245, 158, 11, 0.1);
-}
-
-
-/* VERIFIED STATE */
-
-.verification-status:has(span) {
-  transition: 0.2s ease;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
 }
 
 
@@ -139,11 +129,11 @@
 ========================================= */
 
 .verification-content {
-  width: min(1500px, calc(100% - 70px));
+  width: min(1420px, calc(100% - 70px));
 
   margin: 0 auto;
 
-  padding: 30px 0 55px;
+  padding: 30px 0 60px;
 }
 
 
@@ -153,15 +143,15 @@
 
 .verification-intro {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
 
-  gap: 20px;
+  gap: 25px;
 
-  padding: 23px;
+  padding: 24px 26px;
 
   border: 1px solid var(--border-color);
-  border-radius: 17px;
+  border-radius: 16px;
 
   background: var(--bg-secondary);
 
@@ -171,49 +161,51 @@
 .verification-intro > div:first-child > span {
   color: var(--primary);
 
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 10px;
+  font-weight: 800;
 
-  letter-spacing: 1px;
+  letter-spacing: 1.1px;
 }
 
 .verification-intro h2 {
-  margin-top: 5px;
+  margin-top: 6px;
 
-  font-size: 20px;
-  font-weight: 850;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 800;
 
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
 }
 
 .verification-intro p {
-  margin-top: 5px;
+  margin-top: 6px;
 
   color: var(--text-secondary);
 
-  font-size: 9px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 
 /* =========================================
-   PRIORITY BADGE
+   PRIORITY
 ========================================= */
 
 .priority-high-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 
-  padding: 8px 11px;
+  padding: 9px 13px;
 
-  border: 1px solid rgba(220, 38, 38, 0.16);
+  border: 1px solid rgba(220, 38, 38, 0.2);
   border-radius: 999px;
 
   color: #dc2626;
 
   background: rgba(220, 38, 38, 0.07);
 
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
 
   white-space: nowrap;
@@ -235,7 +227,7 @@
 
   grid-template-columns:
     minmax(0, 2.2fr)
-    minmax(260px, 0.8fr);
+    minmax(280px, 0.8fr);
 
   gap: 18px;
 }
@@ -246,10 +238,10 @@
 ========================================= */
 
 .verification-card {
-  padding: 22px;
+  padding: 24px;
 
   border: 1px solid var(--border-color);
-  border-radius: 17px;
+  border-radius: 16px;
 
   background: var(--bg-secondary);
 
@@ -260,18 +252,20 @@
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 12px;
 
-  padding-bottom: 17px;
+  padding-bottom: 18px;
 
   border-bottom: 1px solid var(--border-color);
 }
 
 .card-heading > svg {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
 
-  padding: 8px;
+  padding: 9px;
+
+  flex-shrink: 0;
 
   border-radius: 10px;
 
@@ -283,8 +277,8 @@
 .card-heading span {
   color: var(--primary);
 
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 9px;
+  font-weight: 800;
 
   letter-spacing: 1px;
 }
@@ -292,7 +286,7 @@
 .card-heading h3 {
   margin-top: 4px;
 
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
 }
 
@@ -302,20 +296,22 @@
 ========================================= */
 
 .detail-grid {
-  padding-top: 19px;
+  padding-top: 21px;
 
   display: grid;
 
   grid-template-columns: 1fr 1fr;
 
-  gap: 18px 25px;
+  gap: 21px 30px;
 }
 
 .verification-detail {
   display: flex;
   flex-direction: column;
 
-  gap: 6px;
+  gap: 7px;
+
+  min-width: 0;
 }
 
 .verification-detail.full {
@@ -325,8 +321,8 @@
 .verification-detail > span {
   color: var(--text-muted);
 
-  font-size: 7px;
-  font-weight: 850;
+  font-size: 9px;
+  font-weight: 800;
 
   letter-spacing: 0.8px;
 }
@@ -335,10 +331,14 @@
   display: flex;
   align-items: center;
 
-  gap: 6px;
+  gap: 7px;
 
-  font-size: 9px;
-  font-weight: 750;
+  color: var(--text-primary);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  line-height: 1.4;
 }
 
 .verification-detail > strong svg {
@@ -353,20 +353,22 @@
 ========================================= */
 
 .evidence-summary-card {
-  padding: 22px;
+  min-height: 100%;
+
+  padding: 24px;
 
   display: flex;
   flex-direction: column;
-
   align-items: flex-start;
+  justify-content: center;
 
-  border: 1px solid rgba(37, 99, 235, 0.15);
-  border-radius: 17px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 16px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(37, 99, 235, 0.065),
+      rgba(37, 99, 235, 0.07),
       var(--bg-secondary)
     );
 
@@ -374,8 +376,8 @@
 }
 
 .evidence-icon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
 
   display: grid;
   place-items: center;
@@ -392,25 +394,31 @@
 
   color: var(--text-muted);
 
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 9px;
+  font-weight: 800;
 
   letter-spacing: 1px;
 }
 
 .evidence-summary-card > strong {
-  margin-top: 3px;
+  margin-top: 4px;
 
-  font-size: 30px;
+  color: var(--text-primary);
+
+  font-size: 34px;
+  line-height: 1;
+
   font-weight: 850;
 }
 
 .evidence-summary-card > p {
-  margin-top: 5px;
+  max-width: 260px;
+
+  margin-top: 8px;
 
   color: var(--text-secondary);
 
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.55;
 }
 
@@ -420,29 +428,30 @@
 ========================================= */
 
 .evidence-button {
-  height: 36px;
+  height: 38px;
 
-  margin-top: 17px;
+  margin-top: 18px;
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   gap: 7px;
 
-  padding: 0 12px;
+  padding: 0 14px;
 
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 9px;
 
   background: var(--bg-primary);
   color: var(--text-secondary);
 
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 750;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .evidence-button:hover {
@@ -463,10 +472,10 @@
 .evidence-section {
   margin-top: 18px;
 
-  padding: 22px;
+  padding: 24px;
 
   border: 1px solid var(--border-color);
-  border-radius: 17px;
+  border-radius: 16px;
 
   background: var(--bg-secondary);
 
@@ -480,7 +489,7 @@
 
   gap: 15px;
 
-  padding-bottom: 17px;
+  padding-bottom: 18px;
 
   border-bottom: 1px solid var(--border-color);
 }
@@ -488,8 +497,8 @@
 .section-heading > div:first-child > span {
   color: var(--primary);
 
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 9px;
+  font-weight: 800;
 
   letter-spacing: 1px;
 }
@@ -497,12 +506,12 @@
 .section-heading h2 {
   margin-top: 5px;
 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
 }
 
 .evidence-count {
-  padding: 7px 10px;
+  padding: 8px 11px;
 
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -511,7 +520,7 @@
 
   background: var(--bg-primary);
 
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
 
   white-space: nowrap;
@@ -523,14 +532,14 @@
 ========================================= */
 
 .evidence-grid {
-  padding-top: 18px;
+  padding-top: 19px;
 
   display: grid;
 
   grid-template-columns:
     repeat(3, minmax(0, 1fr));
 
-  gap: 13px;
+  gap: 15px;
 }
 
 
@@ -546,13 +555,13 @@
 
   background: var(--bg-primary);
 
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .evidence-item:hover {
   transform: translateY(-2px);
 
-  border-color: rgba(37, 99, 235, 0.25);
+  border-color: rgba(37, 99, 235, 0.3);
 
   box-shadow: var(--shadow-sm);
 }
@@ -571,7 +580,7 @@
   align-items: center;
   justify-content: center;
 
-  gap: 7px;
+  gap: 8px;
 
   color: var(--text-muted);
 
@@ -586,13 +595,16 @@
 }
 
 .evidence-preview svg {
+  width: 32px;
+  height: 32px;
+
   color: var(--primary);
 
-  opacity: 0.65;
+  opacity: 0.7;
 }
 
 .evidence-preview span {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 700;
 }
 
@@ -602,24 +614,27 @@
 ========================================= */
 
 .evidence-item-info {
-  padding: 12px;
+  padding: 14px;
 }
 
 .evidence-item-info strong {
   display: block;
 
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 750;
+
+  line-height: 1.4;
 }
 
 .evidence-item-info span {
   display: block;
 
-  margin-top: 4px;
+  margin-top: 5px;
 
   color: var(--text-muted);
 
-  font-size: 7px;
+  font-size: 9px;
+  line-height: 1.4;
 }
 
 
@@ -630,10 +645,10 @@
 .remarks-card {
   margin-top: 18px;
 
-  padding: 22px;
+  padding: 24px;
 
   border: 1px solid var(--border-color);
-  border-radius: 17px;
+  border-radius: 16px;
 
   background: var(--bg-secondary);
 
@@ -645,9 +660,9 @@
 
   min-height: 125px;
 
-  margin-top: 18px;
+  margin-top: 19px;
 
-  padding: 13px;
+  padding: 14px;
 
   resize: vertical;
 
@@ -661,10 +676,12 @@
 
   font-family: inherit;
 
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.6;
 
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
+
+  box-sizing: border-box;
 }
 
 .remarks-card textarea::placeholder {
@@ -679,11 +696,12 @@
 }
 
 .remarks-card > p {
-  margin-top: 7px;
+  margin-top: 8px;
 
   color: var(--text-muted);
 
-  font-size: 8px;
+  font-size: 10px;
+  line-height: 1.5;
 }
 
 
@@ -703,29 +721,30 @@
 
 .send-back-button,
 .verify-button {
-  min-height: 39px;
+  min-height: 42px;
 
   display: inline-flex;
   align-items: center;
-
   justify-content: center;
 
-  gap: 7px;
+  gap: 8px;
 
-  padding: 0 14px;
+  padding: 0 17px;
 
   border-radius: 9px;
 
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 
-/* SEND BACK */
+/* =========================================
+   SEND BACK
+========================================= */
 
 .send-back-button {
   border: 1px solid rgba(220, 38, 38, 0.2);
@@ -738,13 +757,15 @@
 .send-back-button:hover {
   border-color: rgba(220, 38, 38, 0.35);
 
-  background: rgba(220, 38, 38, 0.08);
+  background: rgba(220, 38, 38, 0.09);
 
   transform: translateY(-1px);
 }
 
 
-/* VERIFY */
+/* =========================================
+   VERIFY
+========================================= */
 
 .verify-button {
   border: 1px solid var(--primary);
@@ -758,10 +779,13 @@
   filter: brightness(0.95);
 
   transform: translateY(-1px);
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .verify-button:disabled {
-  opacity: 0.7;
+  opacity: 0.75;
 
   cursor: not-allowed;
 }
@@ -798,7 +822,7 @@
 .verification-success strong {
   display: block;
 
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 850;
 }
 
@@ -807,7 +831,7 @@
 
   color: var(--text-secondary);
 
-  font-size: 8px;
+  font-size: 10px;
   line-height: 1.5;
 }
 
@@ -837,13 +861,17 @@
 
 
 /* =========================================
-   RESPONSIVE — TABLET
+   TABLET
 ========================================= */
 
 @media (max-width: 1100px) {
 
   .verification-grid {
     grid-template-columns: 1fr;
+  }
+
+  .evidence-summary-card {
+    min-height: auto;
   }
 
   .evidence-grid {
@@ -855,7 +883,7 @@
 
 
 /* =========================================
-   RESPONSIVE — 900px
+   900px
 ========================================= */
 
 @media (max-width: 900px) {
@@ -865,24 +893,25 @@
   }
 
   .verification-header {
-    padding: 18px;
+    padding: 16px 18px;
   }
 
   .verification-intro {
-    padding: 20px;
+    padding: 21px;
   }
 
   .verification-card,
   .evidence-section,
-  .remarks-card {
-    padding: 19px;
+  .remarks-card,
+  .evidence-summary-card {
+    padding: 20px;
   }
 
 }
 
 
 /* =========================================
-   RESPONSIVE — MOBILE
+   MOBILE
 ========================================= */
 
 @media (max-width: 600px) {
@@ -892,17 +921,17 @@
 
     align-items: flex-start;
 
-    gap: 15px;
+    gap: 12px;
   }
 
   .verification-header-left {
     align-items: flex-start;
 
-    gap: 11px;
+    gap: 10px;
   }
 
   .verification-header h1 {
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .verification-header p {
@@ -925,11 +954,13 @@
   .verification-intro {
     flex-direction: column;
 
+    align-items: flex-start;
+
     padding: 18px;
   }
 
   .verification-intro h2 {
-    font-size: 18px;
+    font-size: 19px;
   }
 
   .priority-high-badge {
@@ -942,7 +973,7 @@
   .detail-grid {
     grid-template-columns: 1fr;
 
-    gap: 15px;
+    gap: 16px;
   }
 
   .verification-detail.full {

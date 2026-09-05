@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   AlertTriangle,
   Clock3,
+  XCircle,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,9 @@ function InspectionVerification() {
 
   const [remarks, setRemarks] = useState("");
   const [verified, setVerified] = useState(false);
+  const [sentBack, setSentBack] = useState(false);
+  const [selectedEvidence, setSelectedEvidence] = useState(null);
+  const [showAllEvidence, setShowAllEvidence] = useState(false);
 
   const inspection = {
     id: "INS-2026-002",
@@ -30,12 +34,54 @@ function InspectionVerification() {
     evidence: 18,
   };
 
+  const evidenceItems = [
+    "Site Photograph",
+    "Infrastructure Evidence",
+    "Project Progress",
+    "Field Verification",
+    "Institution Premises",
+    "Supporting Document",
+  ];
+
+  /* VERIFY INSPECTION */
+
   const handleVerify = () => {
+    if (!remarks.trim()) {
+      alert("Please enter verification remarks before verifying the inspection.");
+      return;
+    }
+
     setVerified(true);
+    setSentBack(false);
+    alert("Inspection has been successfully verified.");
   };
 
+  /* SEND BACK */
+
   const handleSendBack = () => {
+    if (!remarks.trim()) {
+      alert("Please enter remarks explaining why the inspection is being sent back.");
+      return;
+    }
+
+    setSentBack(true);
+    setVerified(false);
     alert("Inspection has been sent back for review.");
+  };
+
+  /* VIEW EVIDENCE */
+
+  const handleViewEvidence = () => {
+    setShowAllEvidence(true);
+
+    setTimeout(() => {
+      document
+        .getElementById("inspection-evidence")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 100);
   };
 
   return (
@@ -68,9 +114,22 @@ function InspectionVerification() {
 
         </div>
 
-        <div className="verification-status">
+        <div
+          className={`verification-status ${
+            verified
+              ? "verification-status-verified"
+              : sentBack
+              ? "verification-status-sent"
+              : ""
+          }`}
+        >
           <span></span>
-          {verified ? "VERIFIED" : "PENDING VERIFICATION"}
+
+          {verified
+            ? "VERIFIED"
+            : sentBack
+            ? "SENT BACK"
+            : "PENDING VERIFICATION"}
         </div>
 
       </header>
@@ -110,11 +169,13 @@ function InspectionVerification() {
 
             <div className="card-heading">
               <ShieldCheck size={19} />
+
               <div>
                 <span>INSPECTION INFORMATION</span>
                 <h3>Submission Details</h3>
               </div>
             </div>
+
 
             <div className="detail-grid">
 
@@ -135,6 +196,7 @@ function InspectionVerification() {
 
               <div className="verification-detail">
                 <span>INSPECTION DATE</span>
+
                 <strong>
                   <Clock3 size={14} />
                   {inspection.inspectionDate}
@@ -171,7 +233,10 @@ function InspectionVerification() {
               Files submitted by the inspection team for verification.
             </p>
 
-            <button className="evidence-button">
+            <button
+              className="evidence-button"
+              onClick={handleViewEvidence}
+            >
               <Image size={16} />
               View Evidence
             </button>
@@ -183,7 +248,10 @@ function InspectionVerification() {
 
         {/* EVIDENCE SECTION */}
 
-        <section className="evidence-section">
+        <section
+          className="evidence-section"
+          id="inspection-evidence"
+        >
 
           <div className="section-heading">
 
@@ -201,21 +269,30 @@ function InspectionVerification() {
 
           <div className="evidence-grid">
 
-            {[
-              "Site Photograph",
-              "Infrastructure Evidence",
-              "Project Progress",
-              "Field Verification",
-              "Institution Premises",
-              "Supporting Document",
-            ].map((item, index) => (
+            {evidenceItems.map((item, index) => (
 
-              <div className="evidence-item" key={index}>
+              <div
+                className={`evidence-item ${
+                  selectedEvidence === index
+                    ? "evidence-item-selected"
+                    : ""
+                }`}
+                key={index}
+                onClick={() => setSelectedEvidence(index)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    setSelectedEvidence(index);
+                  }
+                }}
+              >
 
                 <div className="evidence-preview">
                   <Image size={30} />
                   <span>Evidence {index + 1}</span>
                 </div>
+
 
                 <div className="evidence-item-info">
 
@@ -233,7 +310,56 @@ function InspectionVerification() {
 
           </div>
 
+
+          {/* SELECTED EVIDENCE */}
+
+          {selectedEvidence !== null && (
+
+            <div className="selected-evidence-panel">
+
+              <div>
+                <span>SELECTED EVIDENCE</span>
+
+                <h3>
+                  {evidenceItems[selectedEvidence]}
+                </h3>
+
+                <p>
+                  Evidence {selectedEvidence + 1} submitted by{" "}
+                  {inspection.inspector}.
+                </p>
+              </div>
+
+              <button
+                className="secondary-modal-button"
+                onClick={() => setSelectedEvidence(null)}
+              >
+                Close
+              </button>
+
+            </div>
+
+          )}
+
         </section>
+
+
+        {/* SHOW ALL EVIDENCE STATUS */}
+
+        {showAllEvidence && (
+
+          <div className="evidence-view-notice">
+
+            <CheckCircle2 size={18} />
+
+            <span>
+              All submitted inspection evidence is now available
+              for review above.
+            </span>
+
+          </div>
+
+        )}
 
 
         {/* REMARKS */}
@@ -246,13 +372,17 @@ function InspectionVerification() {
               <span>OFFICIAL REVIEW</span>
               <h2>Verification Remarks</h2>
             </div>
+
           </div>
+
 
           <textarea
             value={remarks}
             onChange={(event) => setRemarks(event.target.value)}
             placeholder="Enter verification remarks or observations..."
+            disabled={verified}
           />
+
 
           <p>
             Add observations before approving or sending the inspection
@@ -269,10 +399,15 @@ function InspectionVerification() {
           <button
             className="send-back-button"
             onClick={handleSendBack}
+            disabled={verified}
           >
             <AlertTriangle size={17} />
-            Send Back for Review
+
+            {sentBack
+              ? "Sent Back for Review"
+              : "Send Back for Review"}
           </button>
+
 
           <button
             className="verify-button"
@@ -280,7 +415,10 @@ function InspectionVerification() {
             disabled={verified}
           >
             <CheckCircle2 size={18} />
-            {verified ? "Inspection Verified" : "Verify Inspection"}
+
+            {verified
+              ? "Inspection Verified"
+              : "Verify Inspection"}
           </button>
 
         </section>
@@ -295,7 +433,9 @@ function InspectionVerification() {
             <CheckCircle2 size={22} />
 
             <div>
-              <strong>Inspection Successfully Verified</strong>
+              <strong>
+                Inspection Successfully Verified
+              </strong>
 
               <p>
                 The inspection record has been marked as verified.
@@ -306,7 +446,102 @@ function InspectionVerification() {
 
         )}
 
+
+        {/* SEND BACK MESSAGE */}
+
+        {sentBack && (
+
+          <div className="verification-success verification-sent-message">
+
+            <AlertTriangle size={22} />
+
+            <div>
+              <strong>
+                Inspection Sent Back for Review
+              </strong>
+
+              <p>
+                The inspection record requires further review by
+                the inspection team.
+              </p>
+            </div>
+
+          </div>
+
+        )}
+
       </main>
+
+
+      {/* EVIDENCE MODAL */}
+
+      {selectedEvidence !== null && (
+
+        <div
+          className="inspection-modal-overlay"
+          onClick={() => setSelectedEvidence(null)}
+        >
+
+          <div
+            className="inspection-modal evidence-modal"
+            onClick={(event) => event.stopPropagation()}
+          >
+
+            <div className="modal-header">
+
+              <div>
+                <span>FIELD EVIDENCE</span>
+
+                <h2>
+                  {evidenceItems[selectedEvidence]}
+                </h2>
+              </div>
+
+              <button
+                className="modal-close"
+                onClick={() => setSelectedEvidence(null)}
+              >
+                <XCircle size={20} />
+              </button>
+
+            </div>
+
+
+            <div className="evidence-modal-preview">
+
+              <Image size={55} />
+
+              <strong>
+                Evidence {selectedEvidence + 1}
+              </strong>
+
+              <span>
+                {evidenceItems[selectedEvidence]}
+              </span>
+
+              <small>
+                Submitted by {inspection.inspector}
+              </small>
+
+            </div>
+
+
+            <div className="modal-actions">
+
+              <button
+                className="secondary-modal-button"
+                onClick={() => setSelectedEvidence(null)}
+              >
+                Close
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
 
     </div>
   );

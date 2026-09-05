@@ -372,24 +372,24 @@
    SMALL MOBILE
 ======================================== */
 
-.gov-sidebar {
-  width: 255px;
-  height: calc(100vh - 76px);
+@media (max-width: 450px) {
 
-  position: fixed;
-  left: 0;
-  top: 76px;
+  .gov-sidebar {
+    width: 240px;
+  }
 
-  display: flex;
-  flex-direction: column;
+  .sidebar-brand {
+    padding-bottom: 20px;
+  }
 
-  padding: 22px 15px;
+  .sidebar-brand strong {
+    font-size: 13px;
+  }
 
-  background: var(--bg-secondary);
+  .nav-item {
+    padding: 10px 11px;
 
-  border-right: 1px solid var(--border-color);
+    font-size: 10px;
+  }
 
-  z-index: 900;
-
-  overflow-y: auto;
 }
