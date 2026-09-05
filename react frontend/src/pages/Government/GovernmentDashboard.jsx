@@ -1,3 +1,9 @@
+
+import { useEffect, useState } from "react";
+import { getProjects } from "../../services/projectService";
+import { getPMUTeams } from "../../services/pmuService";
+import { getDispatches } from "../../services/dispatchService";
+import ProjectMap from "../../components/Government/ProjectMap";
 import {
   Activity,
   ArrowLeft,
@@ -18,6 +24,28 @@ import { useNavigate } from "react-router-dom";
 import "./GovernmentDashboard.css";
 
 function GovernmentDashboard() {
+  const [firebaseProjects, setFirebaseProjects] = useState([]);
+  const [pmuTeams, setPmuTeams] = useState([]);
+  const [dispatches, setDispatches] = useState([]);
+  useEffect(() => {
+  getProjects().then((data) => {
+    setFirebaseProjects(data);
+    console.log("Projects from Firebase:", data);
+    console.log("Number of projects:", data.length);
+  });
+
+  getPMUTeams().then((data) => {
+    setPmuTeams(data);
+    console.log("PMU Teams from Firebase:", data);
+    console.log("Number of PMU teams:", data.length);
+  });
+
+  getDispatches().then((data) => {
+  setDispatches(data);
+  console.log("Dispatches from Firebase:", data);
+  console.log("Number of dispatches:", data.length);
+});
+}, []);
   const navigate = useNavigate();
 
   // =========================================
@@ -25,33 +53,14 @@ function GovernmentDashboard() {
   // Later this will come from backend/API
   // =========================================
 
-  const projects = [
-    {
-      id: 1,
-      name: "Project Udaan",
-      location: "Haryana",
-      risk: 82,
-      level: "HIGH",
-      reason: "Attendance anomaly + overdue inspection",
-    },
-    {
-      id: 2,
-      name: "Saksham Institute",
-      location: "Delhi",
-      risk: 64,
-      level: "MEDIUM",
-      reason: "Previous compliance issue",
-    },
-    {
-      id: 3,
-      name: "Nayi Disha Centre",
-      location: "Punjab",
-      risk: 28,
-      level: "LOW",
-      reason: "Normal monitoring pattern",
-    },
-  ];
-
+  const projects = firebaseProjects
+  .filter(
+    (project) =>
+      project.risk_category === "High" ||
+      project.risk_category === "Critical"
+  )
+  .sort((a, b) => b.risk_score - a.risk_score)
+  .slice(0, 5);
   const monitoringActivities = [
     {
       title: "AI risk detected",
@@ -150,7 +159,7 @@ function GovernmentDashboard() {
 
               <div>
                 <span>Total Projects</span>
-                <strong>248</strong>
+                <strong>{firebaseProjects.length}</strong>
                 <small>
                   Across monitored locations
                 </small>
@@ -167,7 +176,7 @@ function GovernmentDashboard() {
 
               <div>
                 <span>Active Inspections</span>
-                <strong>32</strong>
+                <strong>{pmuTeams.reduce((total, team) => total + team.active_audits, 0)}</strong>
                 <small>
                   Currently assigned
                 </small>
@@ -201,7 +210,11 @@ function GovernmentDashboard() {
 
               <div>
                 <span>Monitoring Alerts</span>
-                <strong>07</strong>
+                <strong>
+  {firebaseProjects.filter(
+    (project) => project.flagged_for_audit === 1
+  ).length}
+</strong>
                 <small>
                   Require attention
                 </small>
@@ -258,7 +271,11 @@ function GovernmentDashboard() {
 
                 <div>
                   <span>High Risk Projects</span>
-                  <strong>32</strong>
+                  <strong>{firebaseProjects.filter(
+  (project) =>
+    project.risk_category === "High" ||
+    project.risk_category === "Critical"
+).length}</strong>
                   <small>
                     Require priority inspection
                   </small>
@@ -292,7 +309,7 @@ function GovernmentDashboard() {
 
                 <div>
                   <span>AI Assignments</span>
-                  <strong>18</strong>
+                 <strong>{dispatches.length}</strong>
                   <small>
                     Generated this week
                   </small>
@@ -309,7 +326,11 @@ function GovernmentDashboard() {
 
                 <div>
                   <span>Normal Projects</span>
-                  <strong>202</strong>
+                  <strong>{firebaseProjects.filter(
+  (project) =>
+    project.risk_category === "Low" ||
+    project.risk_category === "Medium"
+).length}</strong>
                   <small>
                     No critical signals
                   </small>
@@ -353,16 +374,16 @@ function GovernmentDashboard() {
                     <div className="risk-project-info">
 
                       <strong>
-                        {project.name}
+                        {project.project_id}
                       </strong>
 
                       <span>
                         <Map size={12} />
-                        {project.location}
+                        {project.district}
                       </span>
 
                       <small>
-                        {project.reason}
+                       Risk Score: {project.risk_score}
                       </small>
 
                     </div>
@@ -371,13 +392,13 @@ function GovernmentDashboard() {
                     <div className="risk-score-box">
 
                       <div
-                        className={`risk-circle ${project.level.toLowerCase()}`}
+                        className={`risk-circle ${project.risk_category.toLowerCase()}`}
                       >
-                        {project.risk}
+                        {Math.round(project.risk_score * 100)}
                       </div>
 
                       <span>
-                        {project.level} RISK
+                       {project.risk_category} RISK
                       </span>
 
                     </div>
@@ -619,30 +640,9 @@ function GovernmentDashboard() {
               </div>
 
 
-              <div className="map-placeholder">
-
-                <div className="map-center">
-
-                  <Map size={35} />
-
-                  <strong>
-                    Interactive Map
-                  </strong>
-
-                  <span>
-                    Project and inspection locations
-                  </span>
-
-                </div>
-
-
-                <div className="map-pin pin-one"></div>
-                <div className="map-pin pin-two"></div>
-                <div className="map-pin pin-three"></div>
-                <div className="map-pin pin-four"></div>
-
-              </div>
-
+              <div className="dashboard-project-map">
+  <ProjectMap />
+</div>
             </div>
 
 

@@ -1,0 +1,6 @@
+team_id,team_name,team_lead,team_member,assigned_district,latitude,longitude,primary_specialty,team_capacity_monthly,active_audits,conflict_of_interest_districts,max_travel_radius_km,available_slots
+PMU_TEAM_DEL_01,PMU Inspection Team Alpha,Rajesh Sharma (Senior Auditor),Meenakshi Joshi (Senior Auditor),Central Delhi,28.63,77.21,Child Nutrition,22,6,East Delhi,45,16
+PMU_TEAM_DEL_02,PMU Inspection Team Beta,Priya Verma (Field Inspector),Ananya Rao (Junior Inspector),North Delhi,28.68,77.12,Skill Development,27,6,None,30,21
+PMU_TEAM_DEL_03,PMU Inspection Team Gamma,Amit Kumar (Lead Investigator),Sanjay Patel (Field Inspector),South Delhi,28.54,77.22,Women Empowerment,24,8,North Delhi,50,16
+PMU_TEAM_DEL_04,PMU Inspection Team Delta,Sunita Gupta (Senior Auditor),Deepak Verma (Lead Investigator),East Delhi,28.62,77.29,Rural Health Drive,25,9,South Delhi,45,16
+PMU_TEAM_DEL_05,PMU Inspection Team Epsilon,Vikram Singh (Field Inspector),Ritu Chaudhary (Field Inspector),West Delhi,28.65,77.1,Digital Literacy,30,3,Central Delhi,35,27

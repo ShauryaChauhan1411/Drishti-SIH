@@ -23,6 +23,7 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GeographicMonitoring.css";
+import ProjectMap from "../../../components/Government/ProjectMap";
 
 /*
 =========================================================
@@ -708,109 +709,9 @@ function GeographicMonitoring() {
 
               <div className="geo-map-wrapper">
 
-                <div
-                  className="geo-map"
-                  style={{
-                    transform: `scale(${zoom})`,
-                  }}
-                >
+                
 
-                  <div className="geo-map-grid"></div>
-
-                  <div className="india-outline"></div>
-
-
-                  {/* NETWORK LINES */}
-
-                  <div className="geo-map-lines line-one"></div>
-                  <div className="geo-map-lines line-two"></div>
-                  <div className="geo-map-lines line-three"></div>
-                  <div className="geo-map-lines line-four"></div>
-
-
-                  {/* MARKERS */}
-
-                  {filteredLocations.map((location) => (
-
-                    <button
-                      key={location.id}
-                      className={`geo-marker ${getMarkerClass(location)}`}
-                      style={{
-                        left: location.x,
-                        top: location.y,
-                      }}
-                      onClick={() =>
-                        setSelectedLocation(location)
-                      }
-                      title={location.name}
-                    >
-                      <MapPin size={21} />
-                    </button>
-
-                  ))}
-
-
-                  {/* CENTER */}
-
-                  {!selectedLocation && (
-                    <div className="geo-map-centre">
-
-                      <Map size={27} />
-
-                      <strong>
-                        National Monitoring Map
-                      </strong>
-
-                      <span>
-                        {filteredLocations.length} locations visible
-                      </span>
-
-                    </div>
-                  )}
-
-
-                  {/* SELECTED LOCATION */}
-
-                  {selectedLocation && (
-
-                    <div className="geo-selected-location">
-
-                      <button
-                        className="geo-close-selection"
-                        onClick={() =>
-                          setSelectedLocation(null)
-                        }
-                      >
-                        ×
-                      </button>
-
-                      <div className="selected-location-icon">
-                        <MapPin size={17} />
-                      </div>
-
-                      <div>
-
-                        <strong>
-                          {selectedLocation.name}
-                        </strong>
-
-                        <span>
-                          {selectedLocation.location}
-                        </span>
-
-                        <small>
-                          {selectedLocation.id} •{" "}
-                          {selectedLocation.status}
-                        </small>
-
-                      </div>
-
-                    </div>
-
-                  )}
-
-                </div>
-
+                  <ProjectMap />
 
                 {/* MAP CONTROLS */}
 

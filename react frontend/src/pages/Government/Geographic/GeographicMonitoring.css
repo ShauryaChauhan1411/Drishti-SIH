@@ -2046,3 +2046,19 @@
     padding-right: 18px;
   }
 }
+
+.marker-low {
+  filter: hue-rotate(90deg);
+}
+
+.marker-medium {
+  filter: hue-rotate(35deg);
+}
+
+.marker-high {
+  filter: hue-rotate(0deg);
+}
+
+.marker-critical {
+  filter: hue-rotate(330deg) saturate(2);
+}

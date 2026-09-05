@@ -1,0 +1,6 @@
+project_id,project_district,project_risk_category,project_risk_score,assigned_team_id,assigned_team_name,team_lead,team_member,team_home_district,match_quality_score
+PROJ_DEL_1008,East Delhi,Critical,0.9208,PMU_TEAM_DEL_04,PMU Inspection Team Delta,Sunita Gupta (Senior Auditor),Deepak Verma (Lead Investigator),East Delhi,0.866
+PROJ_DEL_1010,Central Delhi,Critical,0.8918,PMU_TEAM_DEL_01,PMU Inspection Team Alpha,Rajesh Sharma (Senior Auditor),Meenakshi Joshi (Senior Auditor),Central Delhi,0.861
+PROJ_DEL_1032,West Delhi,Critical,0.9358,PMU_TEAM_DEL_02,PMU Inspection Team Beta,Priya Verma (Field Inspector),Ananya Rao (Junior Inspector),North Delhi,0.908
+PROJ_DEL_1051,South Delhi,Critical,0.9181,PMU_TEAM_DEL_03,PMU Inspection Team Gamma,Amit Kumar (Lead Investigator),Sanjay Patel (Field Inspector),South Delhi,0.863
+PROJ_DEL_1058,West Delhi,Critical,0.9202,PMU_TEAM_DEL_05,PMU Inspection Team Epsilon,Vikram Singh (Field Inspector),Ritu Chaudhary (Field Inspector),West Delhi,0.931
