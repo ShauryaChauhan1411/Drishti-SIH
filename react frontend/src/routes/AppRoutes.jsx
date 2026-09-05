@@ -1,149 +1,62 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+// 1. Home landing page
 import Home from "../pages/Home/Home";
 
-import GovernmentLogin
-  from "../pages/Government/GovernmentLogin";
+// 2. Authentication components
+import Login from "../components/login";
+import ProtectedRoute from "../components/ProtectedRoute";
 
-import GovernmentLayout
-  from "../components/Government/GovernmentLayout";
-
-import GovernmentDashboard
-  from "../pages/Government/GovernmentDashboard";
-
-import CCTVMonitoring
-  from "../pages/Government/CCTV/CCTVMonitoring";
-
-import RandomVC
-  from "../pages/Government/RandomVC/RandomVC";
-
-import Inspections
-  from "../pages/Government/Inspections/Inspections";
-
-import InspectionVerification
-  from "../pages/Government/Inspections/InspectionVerification";
-
-import AIAssignment
-  from "../pages/Government/AIAssignment/AIAssignment";
-
-import GeographicMonitoring
-  from "../pages/Government/Geographic/GeographicMonitoring";
-
-import BeneficiaryAnalytics
-  from "../pages/Government/Beneficiary/BeneficiaryAnalytics";
-
+// 3. Government Layout & Dashboard Pages
+import GovernmentLayout from "../components/Government/GovernmentLayout";
+import GovernmentDashboard from "../pages/Government/GovernmentDashboard";
+import CCTVMonitoring from "../pages/Government/CCTV/CCTVMonitoring";
+import RandomVC from "../pages/Government/RandomVC/RandomVC";
+import Inspections from "../pages/Government/Inspections/Inspections";
+import InspectionVerification from "../pages/Government/Inspections/InspectionVerification";
+import AIAssignment from "../pages/Government/AIAssignment/AIAssignment";
+import GeographicMonitoring from "../pages/Government/Geographic/GeographicMonitoring";
+import BeneficiaryAnalytics from "../pages/Government/Beneficiary/BeneficiaryAnalytics";
 
 function AppRoutes() {
   return (
     <Routes>
+      {/* ================================
+          1. FIRST SCREEN: HOME PAGE
+      ================================= */}
+      <Route path="/" element={<Home />} />
 
       {/* ================================
-          HOME
+          2. SECOND SCREEN: LOGIN PAGE
       ================================= */}
-
-      <Route
-        path="/"
-        element={<Home />}
-      />
-
+      <Route path="/government/login" element={<Login />} />
 
       {/* ================================
-          GOVERNMENT LOGIN
+          3. PROTECTED COMMAND CENTRE
+          Accessible ONLY after login
       ================================= */}
-
-      <Route
-        path="/government/login"
-        element={<GovernmentLogin />}
-      />
-
-
-      {/* ================================
-          GOVERNMENT LAYOUT
-
-          Topbar + Sidebar remain fixed.
-          Only the page inside Outlet changes.
-      ================================= */}
-
       <Route
         path="/government/dashboard"
-        element={<GovernmentLayout />}
+        element={
+          <ProtectedRoute>
+            <GovernmentLayout />
+          </ProtectedRoute>
+        }
       >
-
-        {/* DASHBOARD / OVERVIEW */}
-
-        <Route
-          index
-          element={<GovernmentDashboard />}
-        />
-
-
-        {/* CCTV */}
-
-        <Route
-          path="cctv"
-          element={<CCTVMonitoring />}
-        />
-
-
-        {/* RANDOM VC */}
-
-        <Route
-          path="random-vc"
-          element={<RandomVC />}
-        />
-
-
-        {/* INSPECTIONS */}
-
-        <Route
-          path="inspections"
-          element={<Inspections />}
-        />
-
-
-        {/* INSPECTION VERIFICATION */}
-
-        <Route
-          path="inspections/verification"
-          element={<InspectionVerification />}
-        />
-
-
-        {/* AI INSPECTION ENGINE */}
-
-        <Route
-          path="ai-assignment"
-          element={<AIAssignment />}
-        />
-
-
-        {/* GEOGRAPHIC MONITORING */}
-
-        <Route
-          path="geographic"
-          element={<GeographicMonitoring />}
-        />
-
-
-        {/* BENEFICIARY ANALYTICS */}
-
-        <Route
-          path="beneficiary"
-          element={<BeneficiaryAnalytics />}
-        />
-
+        <Route index element={<GovernmentDashboard />} />
+        <Route path="cctv" element={<CCTVMonitoring />} />
+        <Route path="random-vc" element={<RandomVC />} />
+        <Route path="inspections" element={<Inspections />} />
+        <Route path="inspections/verification" element={<InspectionVerification />} />
+        <Route path="ai-assignment" element={<AIAssignment />} />
+        <Route path="geographic" element={<GeographicMonitoring />} />
+        <Route path="beneficiary" element={<BeneficiaryAnalytics />} />
       </Route>
 
-
       {/* ================================
-          INVALID URL
+          FALLBACK FOR UNKNOWN ROUTES
       ================================= */}
-
-      <Route
-        path="*"
-        element={<Navigate to="/" replace />}
-      />
-
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
