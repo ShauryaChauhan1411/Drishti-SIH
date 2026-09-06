@@ -77,14 +77,133 @@ function getRiskIcon(riskCategory) {
 
 function ProjectMap() {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+     const [riskFilter, setRiskFilter] = useState("All");
+     const [districtFilter, setDistrictFilter] = useState("All");
+     const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    getProjects().then((data) => {
+  const loadProjects = () => {
+  setLoading(true);
+  setError("");
+
+  getProjects()
+    .then((data) => {
       setProjects(data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error("Failed to load projects:", err);
+      setError("Unable to load projects.");
+      setLoading(false);
     });
-  }, []);
+};
 
-  return (
+useEffect(() => {
+  loadProjects();
+}, []);
+
+  const districts = [
+  ...new Set(projects.map((project) => project.district))
+];
+
+const filteredProjects = projects.filter((project) => {
+  const matchesRisk =
+    riskFilter === "All" ||
+    project.risk_category === riskFilter;
+
+  const matchesDistrict =
+    districtFilter === "All" ||
+    project.district === districtFilter;
+
+  const search = searchTerm.toLowerCase();
+
+const matchesSearch =
+  String(project.project_id || "").toLowerCase().includes(search) ||
+  String(project.scheme || "").toLowerCase().includes(search) ||
+  String(project.district || "").toLowerCase().includes(search);
+
+  return matchesRisk && matchesDistrict && matchesSearch;
+});
+ return (
+  <>
+  {loading && (
+  <div style={{ marginBottom: "10px", fontSize: "14px" }}>
+    Loading projects...
+  </div>
+)}
+{error && (
+  <div style={{ marginBottom: "10px", fontSize: "14px", color: "red" }}>
+    {error}
+  </div>
+)}
+    <div style={{ marginBottom: "10px" }}>
+        <button
+  onClick={loadProjects}
+  disabled={loading}
+  style={{
+    marginBottom: "10px",
+    padding: "6px 12px",
+    cursor: loading ? "not-allowed" : "pointer"
+  }}
+>
+  {loading ? "Refreshing..." : "Refresh Projects"}
+</button>
+        <label>
+  Search Project:{" "}
+  <input
+    type="text"
+   placeholder="Search ID, scheme or district"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+</label>
+{" "}
+      <label>
+        Risk:{" "}
+        <select
+          value={riskFilter}
+          onChange={(e) => setRiskFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="Critical">Critical</option>
+        </select>
+        {" "}
+<label>
+  District:{" "}
+  <select
+    value={districtFilter}
+    onChange={(e) => setDistrictFilter(e.target.value)}
+  >
+    <option value="All">All</option>
+
+    {districts.map((district) => (
+      <option key={district} value={district}>
+        {district}
+      </option>
+    ))}
+  </select>
+</label>
+<div style={{ marginTop: "8px", fontSize: "14px", color: "#555" }}>
+  Showing {filteredProjects.length} of {projects.length} projects
+</div>
+      </label>
+    </div>
+
+<div
+  style={{
+    marginBottom: "10px",
+    display: "flex",
+    gap: "15px",
+    fontSize: "14px"
+  }}
+>
+  <span>🟢 Low</span>
+  <span>🟡 Medium</span>
+  <span>🔴 Critical</span>
+</div>
     <MapContainer
       center={[28.6139, 77.2090]}
       zoom={11}
@@ -95,26 +214,37 @@ function ProjectMap() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {projects.map((project) => (
+      {filteredProjects.map((project) => (
        <Marker
   key={project.project_id}
   position={[project.latitude, project.longitude]}
   icon={getRiskIcon(project.risk_category)}
 >
           <Popup>
-            <strong>{project.project_id}</strong>
-            <br />
-            Scheme: {project.scheme}
-            <br />
-            District: {project.district}
-            <br />
-            Risk: {project.risk_category}
-            <br />
-            Risk Score: {project.risk_score}
-          </Popup>
+  <strong>{project.project_id}</strong>
+  <br />
+  Scheme: {project.scheme}
+  <br />
+  District: {project.district}
+  <br />
+  Risk: {project.risk_category}
+  <br />
+  Risk Score: {project.risk_score}
+  <br />
+  Beneficiaries: {project.beneficiary_count}
+  <br />
+  Fund Allocated: ₹{project.fund_allocated_lakhs} L
+  <br />
+  Fund Utilized: ₹{project.fund_utilized_lakhs} L
+  <br />
+  Inspections: {project.inspection_count}
+  <br />
+  Flagged for Audit: {project.flagged_for_audit === 1 ? "Yes" : "No"}
+</Popup>
         </Marker>
       ))}
     </MapContainer>
+    </>
   );
 }
 
