@@ -14,6 +14,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import { getProjects } from "../../services/projectService";
+import { getDispatches } from "../../services/dispatchService";
 
 // Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -79,6 +80,7 @@ function ProjectMap() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dispatches, setDispatches] = useState([]);
      const [riskFilter, setRiskFilter] = useState("All");
      const [districtFilter, setDistrictFilter] = useState("All");
      const [searchTerm, setSearchTerm] = useState("");
@@ -87,11 +89,13 @@ function ProjectMap() {
   setLoading(true);
   setError("");
 
-  getProjects()
-    .then((data) => {
-      setProjects(data);
-      setLoading(false);
-    })
+  Promise.all([getProjects(), getDispatches()])
+  .then(([projectData, dispatchData]) => {
+    setProjects(projectData);
+    setDispatches(dispatchData);
+    console.log("Dispatch data from Firestore:", dispatchData);
+    setLoading(false);
+  })
     .catch((err) => {
       console.error("Failed to load projects:", err);
       setError("Unable to load projects.");
@@ -106,6 +110,12 @@ useEffect(() => {
   const districts = [
   ...new Set(projects.map((project) => project.district))
 ];
+
+const getDispatchForProject = (projectId) => {
+  return dispatches.find(
+    (dispatch) => dispatch.project_id === projectId
+  );
+};
 
 const filteredProjects = projects.filter((project) => {
   const matchesRisk =
@@ -137,7 +147,15 @@ const matchesSearch =
     {error}
   </div>
 )}
-    <div style={{ marginBottom: "10px" }}>
+   <div
+  style={{
+    marginBottom: "10px",
+    position: "relative",
+    zIndex: 1000,
+    backgroundColor: "white",
+    padding: "8px"
+  }}
+>
         <button
   onClick={loadProjects}
   disabled={loading}
@@ -204,11 +222,13 @@ const matchesSearch =
   <span>🟡 Medium</span>
   <span>🔴 Critical</span>
 </div>
-    <MapContainer
-      center={[28.6139, 77.2090]}
-      zoom={11}
-      style={{ height: "500px", width: "100%" }}
-    >
+   <MapContainer
+  center={[28.6139, 77.2090]}
+  zoom={11}
+  scrollWheelZoom={false}
+  dragging={true}
+  style={{ height: "500px", width: "100%" }}
+>
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -240,6 +260,15 @@ const matchesSearch =
   Inspections: {project.inspection_count}
   <br />
   Flagged for Audit: {project.flagged_for_audit === 1 ? "Yes" : "No"}
+  <br />
+PMU Team: {getDispatchForProject(project.project_id)?.assigned_team_name || "Not Assigned"}
+<br />
+Team Lead: {getDispatchForProject(project.project_id)?.team_lead || "Not Assigned"}
+<br />
+Match Quality: {getDispatchForProject(project.project_id)?.match_quality_score
+  ? `${(getDispatchForProject(project.project_id).match_quality_score * 100).toFixed(1)}%`
+  : "N/A"}
+
 </Popup>
         </Marker>
       ))}

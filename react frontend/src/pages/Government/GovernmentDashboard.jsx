@@ -27,6 +27,32 @@ function GovernmentDashboard() {
   const [firebaseProjects, setFirebaseProjects] = useState([]);
   const [pmuTeams, setPmuTeams] = useState([]);
   const [dispatches, setDispatches] = useState([]);
+  const [cctvCameras, setCctvCameras] = useState([]);
+
+  const totalProjects = firebaseProjects.length;
+
+const activeInspections = pmuTeams.reduce(
+  (total, team) => total + (team.active_audits || 0),
+  0
+);
+
+const monitoringAlerts = firebaseProjects.filter(
+  (project) => project.flagged_for_audit === 1
+).length;
+
+const highRiskProjects = firebaseProjects.filter(
+  (project) =>
+    project.risk_category === "High" ||
+    project.risk_category === "Critical"
+).length;
+
+const normalProjects = firebaseProjects.filter(
+  (project) =>
+    project.risk_category === "Low" ||
+    project.risk_category === "Medium"
+).length;
+
+const aiAssignments = dispatches.length;
   useEffect(() => {
   getProjects().then((data) => {
     setFirebaseProjects(data);
@@ -45,6 +71,21 @@ function GovernmentDashboard() {
   console.log("Dispatches from Firebase:", data);
   console.log("Number of dispatches:", data.length);
 });
+
+fetch("http://localhost:5050/api/cctv")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Failed to fetch CCTV data");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    setCctvCameras(data);
+    console.log("CCTV cameras from backend:", data);
+  })
+  .catch((error) => {
+    console.error("Failed to load CCTV data:", error);
+  });
 }, []);
   const navigate = useNavigate();
 
@@ -176,7 +217,7 @@ function GovernmentDashboard() {
 
               <div>
                 <span>Active Inspections</span>
-                <strong>{pmuTeams.reduce((total, team) => total + team.active_audits, 0)}</strong>
+                <strong>{activeInspections}</strong>
                 <small>
                   Currently assigned
                 </small>
@@ -193,7 +234,9 @@ function GovernmentDashboard() {
 
               <div>
                 <span>Live CCTV</span>
-                <strong>186</strong>
+                <strong>
+  {cctvCameras.filter((camera) => camera.status === "LIVE").length}
+</strong>
                 <small>
                   Connected feeds
                 </small>
@@ -210,11 +253,7 @@ function GovernmentDashboard() {
 
               <div>
                 <span>Monitoring Alerts</span>
-                <strong>
-  {firebaseProjects.filter(
-    (project) => project.flagged_for_audit === 1
-  ).length}
-</strong>
+                <strong>{monitoringAlerts}</strong>
                 <small>
                   Require attention
                 </small>
@@ -271,11 +310,7 @@ function GovernmentDashboard() {
 
                 <div>
                   <span>High Risk Projects</span>
-                  <strong>{firebaseProjects.filter(
-  (project) =>
-    project.risk_category === "High" ||
-    project.risk_category === "Critical"
-).length}</strong>
+                  <strong>{highRiskProjects}</strong>
                   <small>
                     Require priority inspection
                   </small>
@@ -309,7 +344,7 @@ function GovernmentDashboard() {
 
                 <div>
                   <span>AI Assignments</span>
-                 <strong>{dispatches.length}</strong>
+                 <strong>{aiAssignments}</strong>
                   <small>
                     Generated this week
                   </small>
@@ -326,11 +361,7 @@ function GovernmentDashboard() {
 
                 <div>
                   <span>Normal Projects</span>
-                  <strong>{firebaseProjects.filter(
-  (project) =>
-    project.risk_category === "Low" ||
-    project.risk_category === "Medium"
-).length}</strong>
+                  <strong>{normalProjects}</strong>
                   <small>
                     No critical signals
                   </small>
@@ -483,11 +514,11 @@ function GovernmentDashboard() {
               <div className="health-row">
 
                 <div>
-                  <strong className="health-number">
-                    186
-                  </strong>
+  <strong className="health-number">
+    {cctvCameras.filter((camera) => camera.status === "LIVE").length}
+  </strong>
 
-                  <span>
+  <span>
                     Cameras Online
                   </span>
                 </div>
@@ -504,7 +535,16 @@ function GovernmentDashboard() {
 
                 <div
                   className="health-progress-fill"
-                  style={{ width: "91%" }}
+                  style={{
+  width: `${
+    cctvCameras.length > 0
+      ? (
+          cctvCameras.reduce((total, camera) => total + camera.uptime, 0) /
+          cctvCameras.length
+        ).toFixed(1)
+      : 0
+  }%`
+}}
                 ></div>
 
               </div>
@@ -512,9 +552,9 @@ function GovernmentDashboard() {
 
               <div className="health-footer">
 
-                <span>
-                  18 Cameras Offline
-                </span>
+               <span>
+  {cctvCameras.filter((camera) => camera.status === "OFFLINE").length} Cameras Offline
+</span>
 
                 <button
                   onClick={() =>

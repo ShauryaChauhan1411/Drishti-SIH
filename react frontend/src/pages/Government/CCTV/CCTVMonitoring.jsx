@@ -145,20 +145,31 @@ function CCTVMonitoring() {
   ========================================= */
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCameraFeeds((currentFeeds) =>
-        currentFeeds.map((camera) => ({
-          ...camera,
-          lastUpdate:
-            camera.status === "LIVE"
-              ? "Live"
-              : camera.lastUpdate,
-        }))
-      );
-    }, 5000);
+  const loadCameras = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/api/cctv");
 
-    return () => clearInterval(interval);
-  }, []);
+      if (!response.ok) {
+        throw new Error("Failed to fetch CCTV data");
+      }
+
+      const data = await response.json();
+
+      setCameraFeeds(data);
+      setLastRefresh(new Date());
+    } catch (error) {
+      console.error("Failed to load CCTV data:", error);
+    }
+  };
+
+  loadCameras();
+
+  const interval = setInterval(() => {
+    loadCameras();
+  }, 5000);
+
+  return () => clearInterval(interval);
+}, []);
 
   const liveFeeds = cameraFeeds.filter(
     (camera) => camera.status === "LIVE"
@@ -316,7 +327,14 @@ function CCTVMonitoring() {
             <div>
               <span>SURVEILLANCE HEALTH</span>
 
-              <strong>98%</strong>
+             <strong>
+  {cameraFeeds.length > 0
+    ? `${(
+        cameraFeeds.reduce((total, camera) => total + camera.uptime, 0) /
+        cameraFeeds.length
+      ).toFixed(1)}%`
+    : "0%"}
+</strong>
 
               <small>
                 Overall network availability

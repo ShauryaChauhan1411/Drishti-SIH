@@ -1,0 +1,11 @@
+camera_id,project,location,status,uptime,ai_status,anomaly,video_source
+CCTV-001,Project Monitoring Unit - Delhi,New Delhi,LIVE,99.8,Normal,0,video1.mp4
+CCTV-002,Institution Monitoring Centre,Haryana,LIVE,98.7,Normal,0,video2.mp4
+CCTV-003,Scheme Implementation Centre,Uttar Pradesh,LIVE,97.9,Attention,1,video3.mp4
+CCTV-004,District Monitoring Centre,Rajasthan,OFFLINE,91.2,Offline,0,
+CCTV-005,Social Welfare Institute,Punjab,LIVE,99.1,Normal,0,video1.mp4
+CCTV-006,Beneficiary Support Centre,Madhya Pradesh,LIVE,96.8,Normal,0,video2.mp4
+CCTV-007,Education Monitoring Centre,Delhi,LIVE,98.5,Normal,0,video3.mp4
+CCTV-008,Rural Development Centre,Haryana,OFFLINE,89.4,Offline,0,
+CCTV-009,Health Scheme Centre,Uttar Pradesh,LIVE,97.2,Attention,1,video1.mp4
+CCTV-010,Women Welfare Centre,Rajasthan,LIVE,99.3,Normal,0,video2.mp4

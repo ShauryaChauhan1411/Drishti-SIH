@@ -77,6 +77,25 @@ app.get("/api/dispatch", async (req, res) => {
   }
 });
 
+app.get("/api/cctv", async (req, res) => {
+  try {
+    const snapshot = await db.collection("cctv_cameras").get();
+
+    const cameras = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.json(cameras);
+  } catch (error) {
+    console.error("Error fetching CCTV data:", error);
+
+    res.status(500).json({
+      error: "Failed to fetch CCTV data",
+    });
+  }
+});
+
 app.post("/api/dispatch/generate", async (req, res) => {
   try {
     const options = {
