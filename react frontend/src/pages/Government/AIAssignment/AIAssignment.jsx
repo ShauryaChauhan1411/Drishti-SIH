@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import "./AIAssignment.css";
 
@@ -86,32 +86,39 @@ function AIAssignment() {
     },
   ];
 
-  const teams = [
-    {
-      id: 1,
-      name: "PMU Team 01",
-      region: "North Zone",
-      status: "Available",
-    },
-    {
-      id: 2,
-      name: "PMU Team 07",
-      region: "North Zone",
-      status: "Available",
-    },
-    {
-      id: 3,
-      name: "PMU Team 12",
-      region: "Central Zone",
-      status: "Available",
-    },
-    {
-      id: 4,
-      name: "PMU Team 18",
-      region: "North Zone",
-      status: "Available",
-    },
-  ];
+ const [teams, setTeams] = useState([]);
+ useEffect(() => {
+  const loadTeams = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/api/pmu-teams");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch PMU teams");
+      }
+
+      const data = await response.json();
+
+      const formattedTeams = data.map((team) => ({
+        id: team.id,
+        name: team.team_name || team.name || team.team_id,
+        region: team.region || team.zone || "Delhi",
+        status:
+          team.status ||
+          (team.active_audits !== undefined && team.active_audits === 0
+            ? "Available"
+            : "Available"),
+      }));
+
+      setTeams(formattedTeams);
+
+      console.log("AI Inspection teams from backend:", formattedTeams);
+    } catch (error) {
+      console.error("Failed to load AI Inspection teams:", error);
+    }
+  };
+
+  loadTeams();
+}, []);
 
   // =====================================================
   // STATE
@@ -126,6 +133,54 @@ function AIAssignment() {
   const [assignment, setAssignment] = useState(null);
   const [assignmentHistory, setAssignmentHistory] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  useEffect(() => {
+  const loadProjects = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/api/projects");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch projects");
+      }
+
+      const data = await response.json();
+
+      const formattedProjects = data.map((project) => ({
+        id: project.id,
+        name:
+  project.name ||
+  project.project_name ||
+  project.project_id ||
+  "Unnamed Project",
+       location:
+  project.location ||
+  project.district ||
+  project.state ||
+  "Delhi",
+        risk: Number(project.risk_score || project.risk || 0),
+        level:
+          project.risk_category ||
+          (Number(project.risk_score || project.risk || 0) >= 75
+            ? "HIGH"
+            : Number(project.risk_score || project.risk || 0) >= 50
+            ? "MEDIUM"
+            : "LOW"),
+        attendance: project.attendance || "Attendance data available",
+        compliance: project.compliance || "Compliance review required",
+        lastInspection: project.last_inspection || "Not available",
+        eligible: true,
+      }));
+
+      setProjects(formattedProjects);
+
+      console.log("AI Inspection projects from backend:", formattedProjects);
+    } catch (error) {
+      console.error("Failed to load AI Inspection projects:", error);
+    }
+  };
+
+  loadProjects();
+}, []);
 
   // =====================================================
   // FILTER PROJECTS
@@ -169,64 +224,92 @@ function AIAssignment() {
     }
 
     setIsGenerating(true);
+    console.log("Generate Assignment button clicked", selectedProject);
 
-    setTimeout(() => {
-      const availableTeams = teams.filter(
-        (team) => team.status === "Available"
-      );
+    fetch("http://localhost:5050/api/dispatch/generate", {
+  method: "POST",
+})
+  .then(async (response) => {
+    if (!response.ok) {
+      throw new Error("Failed to generate inspection assignments");
+    }
 
-      const randomTeam =
-        availableTeams[
-          Math.floor(Math.random() * availableTeams.length)
-        ];
+    return response.json();
+  })
+  .then((data) => {
+    const generated = data.assignments || [];
 
-      const priority =
-        selectedProject.risk >= 75
-          ? "URGENT"
-          : selectedProject.risk >= 50
-          ? "HIGH"
-          : "NORMAL";
+    console.log("Dispatch API response:", data);
+  console.log("Generated assignments:", generated);
 
-      const daysToAdd =
-        priority === "URGENT"
-          ? 2
-          : priority === "HIGH"
-          ? 5
-          : 10;
+  console.log("Selected project ID:", selectedProject.id);
+console.log(
+  "Backend project IDs:",
+  generated.map((item) => item.project_id)
+);
+    const selectedAssignment = generated.find(
+      (item) => item.project_id === selectedProject.id
+    );
+    console.log("Selected assignment:", selectedAssignment);
+    console.log("Selected assignment details:", JSON.stringify(selectedAssignment, null, 2));
 
-      const date = new Date();
-      date.setDate(date.getDate() + daysToAdd);
+    if (!selectedAssignment) {
+      alert("No assignment generated for the selected project.");
+      return;
+    }
 
-      const generatedAssignment = {
-        id: Date.now(),
-        projectId: selectedProject.id,
-        project: selectedProject.name,
-        location: selectedProject.location,
-        risk: selectedProject.risk,
-        level: selectedProject.level,
-        reason: `${selectedProject.attendance} + ${selectedProject.compliance}`,
-        team: selectedTeam
-          ? teams.find((team) => team.id === Number(selectedTeam))?.name
-          : randomTeam.name,
-        inspectionType,
-        priority,
-        date: date.toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        status: "ASSIGNED",
-      };
+    const priority =
+      selectedProject.risk >= 75
+        ? "URGENT"
+        : selectedProject.risk >= 50
+        ? "HIGH"
+        : "NORMAL";
 
-      setAssignment(generatedAssignment);
+    const generatedAssignment = {
+      id: Date.now(),
+      projectId: selectedAssignment.project_id,
+      project: selectedProject.name,
+      location: selectedProject.location,
+      risk: selectedProject.risk,
+      level: selectedProject.level,
+      reason: selectedAssignment.reason || "AI-based risk and availability matching",
+      team:
+  selectedAssignment.assigned_team_name ||
+  selectedAssignment.assigned_team_id ||
+  "Assigned PMU Team",
+      inspectionType,
+      priority,
+      date: selectedAssignment.inspection_date
+        ? new Date(selectedAssignment.inspection_date).toLocaleDateString(
+            "en-IN",
+            {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }
+          )
+        : new Date().toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+      status: "ASSIGNED",
+    };
 
-      setAssignmentHistory((previous) => [
-        generatedAssignment,
-        ...previous,
-      ]);
+    setAssignment(generatedAssignment);
 
-      setIsGenerating(false);
-    }, 700);
+    setAssignmentHistory((previous) => [
+      generatedAssignment,
+      ...previous,
+    ]);
+  })
+  .catch((error) => {
+    console.error("AI assignment generation failed:", error);
+    alert("Failed to generate inspection assignment.");
+  })
+  .finally(() => {
+    setIsGenerating(false);
+  });
   };
 
   // =====================================================
