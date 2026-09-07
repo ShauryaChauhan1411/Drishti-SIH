@@ -96,6 +96,25 @@ app.get("/api/cctv", async (req, res) => {
   }
 });
 
+app.get("/api/inspections", async (req, res) => {
+  try {
+    const snapshot = await db.collection("inspections").get();
+
+    const inspections = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.json(inspections);
+  } catch (error) {
+    console.error("Error fetching inspections:", error);
+
+    res.status(500).json({
+      error: "Failed to fetch inspections",
+    });
+  }
+});
+
 app.post("/api/dispatch/generate", async (req, res) => {
   try {
     const options = {

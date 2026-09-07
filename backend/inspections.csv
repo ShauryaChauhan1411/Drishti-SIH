@@ -1,0 +1,7 @@
+id,project,institution,location,inspector,assignedDate,inspectionDate,status,priority,evidence
+INS-2026-001,Project Asha,Asha Welfare Institute,New Delhi,PMU Team 04,28 Aug 2026,30 Aug 2026,In Progress,Normal,12
+INS-2026-002,Project Udaan,Udaan Development Centre,Gurugram,PMU Team 07,27 Aug 2026,29 Aug 2026,Pending Verification,High,18
+INS-2026-003,Project Saksham,Saksham Support Foundation,Jaipur,PMU Team 02,26 Aug 2026,28 Aug 2026,Completed,Normal,24
+INS-2026-004,Project Nirmaan,Nirmaan Community Centre,Lucknow,PMU Team 09,25 Aug 2026,27 Aug 2026,Completed,Low,16
+INS-2026-005,Project Sahayata,Sahayata Social Organisation,Bhopal,PMU Team 05,29 Aug 2026,01 Sep 2026,Assigned,High,0
+INS-2026-006,Project Pragati,Pragati Welfare Centre,Chandigarh,PMU Team 03,24 Aug 2026,26 Aug 2026,Pending Verification,Normal,21

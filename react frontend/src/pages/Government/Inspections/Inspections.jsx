@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   CalendarDays,
@@ -102,9 +103,32 @@ function Inspections() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const [selectedInspection, setSelectedInspection] = useState(null);
+  const [inspections, setInspections] = useState(inspectionData);
+
+  useEffect(() => {
+  const loadInspections = async () => {
+    try {
+      const response = await fetch("http://localhost:5050/api/inspections");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch inspections");
+      }
+
+      const data = await response.json();
+
+      setInspections(data);
+
+      console.log("Inspections from backend:", data);
+    } catch (error) {
+      console.error("Failed to load inspections:", error);
+    }
+  };
+
+  loadInspections();
+}, []);
 
   const filteredInspections = useMemo(() => {
-    return inspectionData.filter((inspection) => {
+    return inspections.filter((inspection) => {
       const search = searchTerm.toLowerCase().trim();
 
       const matchesSearch =
@@ -126,21 +150,21 @@ function Inspections() {
     });
   }, [searchTerm, statusFilter, priorityFilter]);
 
-  const totalInspections = inspectionData.length;
+  const totalInspections = inspections.length;
 
-  const assignedCount = inspectionData.filter(
+  const assignedCount = inspections.filter(
     (item) => item.status === "Assigned"
   ).length;
 
-  const inProgressCount = inspectionData.filter(
+  const inProgressCount = inspections.filter(
     (item) => item.status === "In Progress"
   ).length;
 
-  const pendingCount = inspectionData.filter(
+  const pendingCount = inspections.filter(
     (item) => item.status === "Pending Verification"
   ).length;
 
-  const completedCount = inspectionData.filter(
+  const completedCount = inspections.filter(
     (item) => item.status === "Completed"
   ).length;
 
