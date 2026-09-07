@@ -825,3 +825,259 @@
     width: 100%;
   }
 }
+/* ================================
+   ACTIVE VC CALL
+================================ */
+
+.vc-call-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #0b1120;
+  color: white;
+}
+
+.vc-call-header {
+  min-height: 76px;
+  padding: 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vc-call-header span {
+  display: block;
+
+  color: #60a5fa;
+
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.vc-call-header h2 {
+  margin-top: 4px;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.vc-live-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 11px;
+
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 999px;
+
+  color: #86efac;
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.vc-live-status span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.vc-call-content {
+  flex: 1;
+
+  display: grid;
+  grid-template-columns: 1fr 270px;
+
+  gap: 18px;
+
+  padding: 20px;
+}
+
+.vc-video-area {
+  position: relative;
+
+  min-height: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(37, 99, 235, 0.16),
+      transparent 45%
+    ),
+    #111827;
+}
+
+.vc-video-placeholder {
+  text-align: center;
+}
+
+.vc-video-placeholder svg {
+  margin-bottom: 15px;
+
+  color: #60a5fa;
+}
+
+.vc-video-placeholder h3 {
+  font-size: 20px;
+}
+
+.vc-video-placeholder p {
+  margin-top: 5px;
+
+  color: #9ca3af;
+
+  font-size: 11px;
+}
+
+.vc-video-placeholder span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #6b7280;
+
+  font-size: 9px;
+}
+
+.vc-self-preview {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+
+  width: 150px;
+  height: 95px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+
+  background: #1f2937;
+
+  color: #9ca3af;
+
+  font-size: 8px;
+}
+
+.vc-call-info {
+  padding: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+
+  background: #111827;
+}
+
+.vc-call-info > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.vc-call-info span {
+  color: #6b7280;
+
+  font-size: 7px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+}
+
+.vc-call-info strong {
+  font-size: 11px;
+}
+
+.connected-text {
+  color: #4ade80;
+}
+
+.vc-call-controls {
+  min-height: 82px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vc-call-controls > button {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+
+  background: #1f2937;
+  color: white;
+
+  cursor: pointer;
+}
+
+.vc-call-controls > button:hover {
+  background: #374151;
+}
+
+.vc-call-controls .end-call-button {
+  width: auto;
+
+  display: flex;
+  gap: 7px;
+
+  padding: 0 16px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #dc2626;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.vc-call-controls .end-call-button:hover {
+  background: #b91c1c;
+}
+.vc-call-controls .control-off {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}

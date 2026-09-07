@@ -14,58 +14,77 @@ import {
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getProjects } from "../../../services/projectService";
 import "./BeneficiaryAnalytics.css";
 
-const beneficiaryData = [
-  {
-    id: "BEN-10482",
-    project: "Project Sunrise",
-    location: "Kurukshetra, Haryana",
-    total: 1240,
-    present: 1168,
-    attendance: 94.2,
-    status: "Normal",
-  },
-  {
-    id: "BEN-09831",
-    project: "Project Udaan",
-    location: "New Delhi, Delhi",
-    total: 980,
-    present: 921,
-    attendance: 93.9,
-    status: "Normal",
-  },
-  {
-    id: "BEN-08745",
-    project: "Project Asha",
-    location: "Jaipur, Rajasthan",
-    total: 760,
-    present: 612,
-    attendance: 80.5,
-    status: "Attention",
-  },
-  {
-    id: "BEN-07621",
-    project: "Project Sarthak",
-    location: "Lucknow, Uttar Pradesh",
-    total: 1530,
-    present: 1458,
-    attendance: 95.3,
-    status: "Normal",
-  },
-  {
-    id: "BEN-06418",
-    project: "Project Pragati",
-    location: "Patna, Bihar",
-    total: 1120,
-    present: 894,
-    attendance: 79.8,
-    status: "Attention",
-  },
-];
 
 function BeneficiaryAnalytics() {
   const navigate = useNavigate();
+
+  const [projects, setProjects] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState("");
+const [searchTerm, setSearchTerm] = useState("");
+
+useEffect(() => {
+  loadProjects();
+}, []);
+
+const loadProjects = async () => {
+  try {
+    setLoading(true);
+    setError("");
+
+    const data = await getProjects();
+    setProjects(data);
+  } catch (err) {
+    console.error("Failed to load beneficiary data:", err);
+    setError("Unable to load beneficiary data.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+const beneficiaryData = projects.map((project) => {
+  const total = Number(project.beneficiary_count || 0);
+  const attendance = Number(project.attendance_rate_pct || 0);
+  const present = Math.round(total * attendance / 100);
+
+  return {
+    id: project.project_id,
+    project: project.scheme || project.project_id,
+    location: `${project.district || ""}, ${project.state || ""}`,
+    total,
+    present,
+    attendance,
+    status: attendance < 85 ? "Attention" : "Normal",
+  };
+});
+
+const totalBeneficiaries = beneficiaryData.reduce(
+  (sum, item) => sum + item.total,
+  0
+);
+
+const totalPresent = beneficiaryData.reduce(
+  (sum, item) => sum + item.present,
+  0
+);
+
+const averageAttendance =
+  beneficiaryData.length > 0
+    ? (
+        beneficiaryData.reduce(
+          (sum, item) => sum + item.attendance,
+          0
+        ) / beneficiaryData.length
+      ).toFixed(1)
+    : "0.0";
+
+const anomalies = beneficiaryData.filter(
+  (item) => item.status === "Attention"
+).length;
 
   return (
     <div className="beneficiary-page">
@@ -105,10 +124,14 @@ function BeneficiaryAnalytics() {
             ANALYTICS LIVE
           </div>
 
-          <button className="beneficiary-refresh">
-            <RefreshCw size={15} />
-            Refresh
-          </button>
+          <button
+  className="beneficiary-refresh"
+  onClick={loadProjects}
+  disabled={loading}
+>
+  <RefreshCw size={15} />
+  {loading ? "Refreshing..." : "Refresh"}
+</button>
 
         </div>
 
@@ -126,7 +149,7 @@ function BeneficiaryAnalytics() {
 
           <div>
             <span>TOTAL BENEFICIARIES</span>
-            <strong>5,630</strong>
+            <strong>{totalBeneficiaries.toLocaleString()}</strong>
             <small>Across monitored projects</small>
           </div>
         </div>
@@ -138,7 +161,7 @@ function BeneficiaryAnalytics() {
 
           <div>
             <span>ACTIVE / PRESENT</span>
-            <strong>5,053</strong>
+            <strong>{totalPresent.toLocaleString()}</strong>
             <small>Current reporting period</small>
           </div>
         </div>
@@ -150,7 +173,7 @@ function BeneficiaryAnalytics() {
 
           <div>
             <span>AVERAGE ATTENDANCE</span>
-            <strong>89.7%</strong>
+            <strong>{averageAttendance}%</strong>
             <small>Across monitored projects</small>
           </div>
         </div>
@@ -162,7 +185,7 @@ function BeneficiaryAnalytics() {
 
           <div>
             <span>ANOMALIES DETECTED</span>
-            <strong>07</strong>
+            <strong>{anomalies.toString().padStart(2, "0")}</strong>
             <small>Require departmental review</small>
           </div>
         </div>
@@ -332,10 +355,12 @@ function BeneficiaryAnalytics() {
 
               <Search size={15} />
 
-              <input
-                type="text"
-                placeholder="Search project or location"
-              />
+             <input
+  type="text"
+  placeholder="Search project or location"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
 
             </div>
 
@@ -359,7 +384,17 @@ function BeneficiaryAnalytics() {
 
               <tbody>
 
-                {beneficiaryData.map((item) => (
+                {beneficiaryData
+  .filter((item) => {
+    const search = searchTerm.toLowerCase();
+
+   return (
+  item.id.toLowerCase().includes(search) ||
+  item.project.toLowerCase().includes(search) ||
+  item.location.toLowerCase().includes(search)
+);
+  })
+  .map((item) => (
 
                   <tr key={item.id}>
 

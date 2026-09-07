@@ -5,6 +5,7 @@ import {
   Clock3,
   MapPin,
   Monitor,
+  Mic,
   PhoneCall,
   RefreshCw,
   Search,
@@ -71,9 +72,12 @@ function RandomVC() {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRecord, setSelectedRecord] = useState(null);
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [message, setMessage] = useState("");
+ const [selectedRecord, setSelectedRecord] = useState(null);
+const [isSelecting, setIsSelecting] = useState(false);
+const [message, setMessage] = useState("");
+const [inCall, setInCall] = useState(false);
+const [micOn, setMicOn] = useState(true);
+const [cameraOn, setCameraOn] = useState(true);
 
   const availableRecords = vcRecords.filter(
     (record) => record.status === "Available"
@@ -111,17 +115,103 @@ function RandomVC() {
   };
 
   const handleStartVC = (record) => {
-    if (record.status !== "Available") {
-      setMessage("This VC connection is currently unavailable.");
-      return;
-    }
+    console.log("VC STATUS:", record.status);
+console.log("VC RECORD:", record);
 
-    setSelectedRecord(record);
-    setMessage(`VC connection initiated with ${record.project}.`);
-  };
+  if (record.status !== "Available") {
+    setMessage("This VC connection is currently unavailable.");
+    return;
+  }
+
+  setSelectedRecord(record);
+  setMessage("");
+  setInCall(true);
+};
 
   return (
     <div className="random-vc-page">
+      {inCall && selectedRecord && (
+  <div className="vc-call-overlay">
+    <div className="vc-call-header">
+      <div>
+        <span>SECURE VIDEO CONNECTION</span>
+        <h2>{selectedRecord.project}</h2>
+      </div>
+
+      <div className="vc-live-status">
+        <span></span>
+        LIVE CONNECTION
+      </div>
+    </div>
+
+    <div className="vc-call-content">
+      <div className="vc-video-area">
+        <div className="vc-video-placeholder">
+          <Video size={52} />
+          <h3>{selectedRecord.person}</h3>
+          <p>{selectedRecord.type}</p>
+          <span>{selectedRecord.location}</span>
+        </div>
+
+        <div className="vc-self-preview">
+          <Monitor size={24} />
+          <span>Government Officer</span>
+        </div>
+      </div>
+
+      <div className="vc-call-info">
+        <div>
+          <span>CONNECTED TO</span>
+          <strong>{selectedRecord.project}</strong>
+        </div>
+
+        <div>
+          <span>STAKEHOLDER</span>
+          <strong>{selectedRecord.person}</strong>
+        </div>
+
+        <div>
+          <span>LOCATION</span>
+          <strong>{selectedRecord.location}</strong>
+        </div>
+
+        <div>
+          <span>CONNECTION STATUS</span>
+          <strong className="connected-text">Connected</strong>
+        </div>
+      </div>
+    </div>
+
+    <div className="vc-call-controls">
+     <button
+  title={micOn ? "Mute microphone" : "Unmute microphone"}
+  onClick={() => setMicOn(!micOn)}
+  className={!micOn ? "control-off" : ""}
+>
+ <Mic size={19} />
+</button>
+
+<button
+  title={cameraOn ? "Turn camera off" : "Turn camera on"}
+  onClick={() => setCameraOn(!cameraOn)}
+  className={!cameraOn ? "control-off" : ""}
+>
+  <Video size={19} />
+</button>
+
+      <button
+        className="end-call-button"
+        onClick={() => {
+          setInCall(false);
+          setMessage("VC session ended.");
+        }}
+      >
+        <XCircle size={19} />
+        End Call
+      </button>
+    </div>
+  </div>
+)}
 
       {/* TOP HEADER */}
 
