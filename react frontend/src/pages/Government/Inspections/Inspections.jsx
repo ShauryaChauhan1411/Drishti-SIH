@@ -119,6 +119,10 @@ function Inspections() {
       setInspections(data);
 
       console.log("Inspections from backend:", data);
+      console.log(
+  "PRAGATI FROM BACKEND:",
+  JSON.stringify(data.find((item) => item.id === "INS-2026-006"), null, 2)
+);
     } catch (error) {
       console.error("Failed to load inspections:", error);
     }
@@ -148,8 +152,7 @@ function Inspections() {
 
       return matchesSearch && matchesStatus && matchesPriority;
     });
-  }, [searchTerm, statusFilter, priorityFilter]);
-
+  }, [inspections, searchTerm, statusFilter, priorityFilter]);
   const totalInspections = inspections.length;
 
   const assignedCount = inspections.filter(

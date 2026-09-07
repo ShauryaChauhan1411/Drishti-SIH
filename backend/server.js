@@ -115,6 +115,36 @@ app.get("/api/inspections", async (req, res) => {
   }
 });
 
+app.patch("/api/inspections/:id/status", async (req, res) => {
+  const { id } = req.params;
+  const { status, remarks } = req.body;
+
+  console.log("PATCH HIT:", id, status, remarks);
+
+  try {
+    const inspectionRef = db.collection("inspections").doc(id);
+
+    await inspectionRef.update({
+      status: status,
+      verificationRemarks: remarks || "",
+      verifiedAt: new Date().toISOString(),
+    });
+
+    res.json({
+      message: "Inspection status updated successfully",
+      id: id,
+      status: status,
+      remarks: remarks || "",
+    });
+  } catch (error) {
+    console.error("PATCH ERROR:", error);
+
+    res.status(500).json({
+      error: "Failed to update inspection status",
+    });
+  }
+});
+
 app.post("/api/dispatch/generate", async (req, res) => {
   try {
     const options = {

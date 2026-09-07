@@ -11,28 +11,19 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./InspectionVerification.css";
 
 function InspectionVerification() {
   const navigate = useNavigate();
-
+const location = useLocation();
   const [remarks, setRemarks] = useState("");
   const [verified, setVerified] = useState(false);
   const [sentBack, setSentBack] = useState(false);
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const [showAllEvidence, setShowAllEvidence] = useState(false);
 
-  const inspection = {
-    id: "INS-2026-002",
-    project: "Project Udaan",
-    institution: "Udaan Development Centre",
-    location: "Gurugram, Haryana",
-    inspector: "PMU Team 07",
-    inspectionDate: "29 Aug 2026",
-    priority: "High",
-    evidence: 18,
-  };
+  const inspection = location.state?.inspection;
 
   const evidenceItems = [
     "Site Photograph",
@@ -45,29 +36,82 @@ function InspectionVerification() {
 
   /* VERIFY INSPECTION */
 
-  const handleVerify = () => {
-    if (!remarks.trim()) {
-      alert("Please enter verification remarks before verifying the inspection.");
-      return;
+ const handleVerify = async () => {
+  if (!remarks.trim()) {
+    alert("Please enter verification remarks before verifying the inspection.");
+    return;
+  }
+
+  try {
+    console.log("VERIFY INSPECTION ID:", inspection.id);
+    const response = await fetch(
+      `http://localhost:5050/api/inspections/${inspection.id}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "Completed",
+          remarks: remarks.trim(),
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to verify inspection");
     }
 
     setVerified(true);
     setSentBack(false);
+
     alert("Inspection has been successfully verified.");
-  };
+  } catch (error) {
+    console.error("Verification error:", error);
+    alert("Failed to verify inspection. Please try again.");
+  }
+};
 
   /* SEND BACK */
 
-  const handleSendBack = () => {
-    if (!remarks.trim()) {
-      alert("Please enter remarks explaining why the inspection is being sent back.");
-      return;
+ const handleSendBack = async () => {
+  if (!remarks.trim()) {
+    alert("Please enter remarks explaining why the inspection is being sent back.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:5050/api/inspections/${inspection.id}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "Sent Back",
+          remarks: remarks.trim(),
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to send back inspection");
     }
 
     setSentBack(true);
     setVerified(false);
+
     alert("Inspection has been sent back for review.");
-  };
+  } catch (error) {
+    console.error("Send back error:", error);
+    alert("Failed to send back inspection. Please try again.");
+  }
+};
 
   /* VIEW EVIDENCE */
 
