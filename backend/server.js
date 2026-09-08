@@ -41,6 +41,38 @@ app.get("/api/projects", async (req, res) => {
     });
   }
 });
+
+app.get("/api/projects/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+  return res.status(400).json({
+    error: "Project ID is required",
+  });
+}
+
+    const projectRef = db.collection("projects").doc(id);
+    const projectDoc = await projectRef.get();
+
+    if (!projectDoc.exists) {
+      return res.status(404).json({
+        error: "Project not found",
+      });
+    }
+
+    res.json({
+      id: projectDoc.id,
+      ...projectDoc.data(),
+    });
+  } catch (error) {
+    console.error("Error fetching project:", error);
+
+    res.status(500).json({
+      error: "Failed to fetch project",
+    });
+  }
+});
+
 app.get("/api/pmu-teams", async (req, res) => {
   try {
     const snapshot = await db.collection("pmu_teams").get();
@@ -98,7 +130,8 @@ app.get("/api/cctv", async (req, res) => {
 
 app.get("/api/inspections", async (req, res) => {
   try {
-    const snapshot = await db.collection("inspections").get();
+   const snapshot = await db.collection("inspections").get();
+ console.log("INSPECTION COUNT:", snapshot.size);
 
     const inspections = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -111,6 +144,34 @@ app.get("/api/inspections", async (req, res) => {
 
     res.status(500).json({
       error: "Failed to fetch inspections",
+    });
+  }
+});
+
+app.post("/api/inspections", async (req, res) => {
+  try {
+    const inspectionData = req.body;
+    if (!inspectionData.projectId || !inspectionData.projectName) {
+  return res.status(400).json({
+    error: "projectId and projectName are required",
+  });
+}
+
+    const docRef = await db.collection("inspections").add({
+      ...inspectionData,
+      status: inspectionData.status || "Pending Verification",
+      submittedAt: new Date().toISOString(),
+    });
+
+    res.status(201).json({
+      message: "Inspection submitted successfully",
+      id: docRef.id,
+    });
+  } catch (error) {
+    console.error("Error submitting inspection:", error);
+
+    res.status(500).json({
+      error: "Failed to submit inspection",
     });
   }
 });
@@ -137,6 +198,13 @@ app.get("/api/notifications", async (req, res) => {
 app.patch("/api/inspections/:id/status", async (req, res) => {
   const { id } = req.params;
   const { status, remarks } = req.body;
+  const allowedStatuses = ["Pending Verification", "Completed", "Sent Back", "Assigned", "In Progress"];
+
+if (!allowedStatuses.includes(status)) {
+  return res.status(400).json({
+    error: "Invalid inspection status",
+  });
+}
 
   console.log("PATCH HIT:", id, status, remarks);
 
