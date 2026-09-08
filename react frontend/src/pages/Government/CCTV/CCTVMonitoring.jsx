@@ -19,6 +19,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CCTVMonitoring.css";
 
+const videoMap = {
+  "CCTV-001": "/cctv/video1.mp4",
+  "CCTV-002": "/cctv/video2.mp4",
+  "CCTV-003": "/cctv/video3.mp4",
+  "CCTV-005": "/cctv/video4.mp4",
+};
+
 const initialCameraFeeds = [
   {
     id: "CCTV-001",
@@ -489,30 +496,14 @@ function CCTVMonitoring() {
 
                   {camera.status === "LIVE" ? (
 
-                    <div className="live-camera-placeholder">
-
-                      <Camera size={36} />
-
-                      <strong>
-                        LIVE CCTV FEED
-                      </strong>
-
-                      <span>
-                        Secure surveillance stream
-                      </span>
-
-                      <div className="stream-indicator">
-
-                        <Circle
-                          size={8}
-                          fill="currentColor"
-                        />
-
-                        STREAM ACTIVE
-
-                      </div>
-
-                    </div>
+                 <video
+  className="cctv-video"
+  src={videoMap[camera.id]}
+  controls
+  autoPlay
+  muted
+  loop
+/>
 
                   ) : (
 
