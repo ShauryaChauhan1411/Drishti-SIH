@@ -57,10 +57,11 @@ function GovernmentLayout() {
 
           {/* NOTIFICATIONS */}
 
-          <button
-            className="government-topbar-button"
-            aria-label="Notifications"
-          >
+         <button
+  className="government-topbar-button"
+  aria-label="Notifications"
+  onClick={() => navigate("/government/dashboard/notifications")}
+>
             <Bell size={19} />
 
             <b>3</b>

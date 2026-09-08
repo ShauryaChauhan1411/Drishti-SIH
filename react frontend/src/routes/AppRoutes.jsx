@@ -1,3 +1,5 @@
+
+import Notifications from "../pages/Notifications/Notifications";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 // 1. Home landing page
@@ -51,6 +53,7 @@ function AppRoutes() {
         <Route path="ai-assignment" element={<AIAssignment />} />
         <Route path="geographic" element={<GeographicMonitoring />} />
         <Route path="beneficiary" element={<BeneficiaryAnalytics />} />
+        <Route path="notifications" element={<Notifications />} />
       </Route>
 
       {/* ================================

@@ -115,6 +115,25 @@ app.get("/api/inspections", async (req, res) => {
   }
 });
 
+app.get("/api/notifications", async (req, res) => {
+  try {
+    const snapshot = await db.collection("notifications").get();
+
+    const notifications = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+
+    res.status(500).json({
+      error: "Failed to fetch notifications",
+    });
+  }
+});
+
 app.patch("/api/inspections/:id/status", async (req, res) => {
   const { id } = req.params;
   const { status, remarks } = req.body;

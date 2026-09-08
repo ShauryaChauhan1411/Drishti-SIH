@@ -1,0 +1,44 @@
+
+.notifications-page {
+  padding: 30px;
+  min-height: 100%;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.notifications-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.notifications-refresh {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #1e3a8a;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.notifications-refresh:hover {
+  opacity: 0.9;
+}
+
+.notification-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.notification-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
