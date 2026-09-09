@@ -286,6 +286,134 @@ app.post("/api/dispatch/generate", async (req, res) => {
   }
 });
 
+app.post("/api/allotment/random", async (req, res) => {
+  try {
+    const projectsSnapshot = await db.collection("projects").get();
+    const teamsSnapshot = await db.collection("pmu_teams").get();
+
+    const projects = projectsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    const teams = teamsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    if (projects.length === 0 || teams.length === 0) {
+      return res.status(400).json({
+        error: "Projects or PMU teams are not available",
+      });
+    }
+
+    const teamState = teams.map((team) => ({
+      ...team,
+      remainingSlots: Number(team.available_slots) || 0,
+    }));
+
+    const assignments = [];
+
+    for (const project of projects) {
+      const eligibleTeams = teamState.filter((team) => {
+        if (team.remainingSlots <= 0) return false;
+
+        const conflictDistricts = team.conflict_of_interest_districts
+          ? team.conflict_of_interest_districts
+              .split(",")
+              .map((district) => district.trim().toLowerCase())
+          : [];
+
+        if (
+          project.district &&
+          conflictDistricts.includes(project.district.toLowerCase())
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+
+      if (eligibleTeams.length === 0) {
+        continue;
+      }
+
+      const shuffledTeams = [...eligibleTeams].sort(
+        () => Math.random() - 0.5
+      );
+
+      const selectedTeam = shuffledTeams[0];
+
+      selectedTeam.remainingSlots--;
+
+      assignments.push({
+        project_id: project.id,
+        project_district: project.district || null,
+        project_scheme: project.scheme || null,
+        assigned_team_id: selectedTeam.team_id || selectedTeam.id,
+        assigned_team_name: selectedTeam.team_name,
+        team_lead: selectedTeam.team_lead,
+        team_member: selectedTeam.team_member,
+        team_home_district: selectedTeam.assigned_district,
+        allotment_type: "Randomized",
+        status: "Assigned",
+        allotted_at: new Date().toISOString(),
+      });
+    }
+
+    const batch = db.batch();
+
+    const existingSnapshot = await db.collection("random_allotments").get();
+
+    existingSnapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    assignments.forEach((assignment) => {
+      const docRef = db
+        .collection("random_allotments")
+        .doc(assignment.project_id);
+
+      batch.set(docRef, assignment);
+    });
+
+    await batch.commit();
+
+    res.json({
+      message: "Random allotment completed successfully",
+      total_projects: projects.length,
+      total_allotted: assignments.length,
+      assignments,
+    });
+  } catch (error) {
+    console.error("Random allotment error:", error);
+
+    res.status(500).json({
+      error: "Failed to perform random allotment",
+      details: error.message,
+    });
+  }
+});
+
+app.get("/api/allotment/random", async (req, res) => {
+  try {
+    const snapshot = await db.collection("random_allotments").get();
+
+    const assignments = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.json(assignments);
+  } catch (error) {
+    console.error("Error fetching random allotments:", error);
+
+    res.status(500).json({
+      error: "Failed to fetch random allotments",
+    });
+  }
+});
+
 const PORT = 5050;
 
 app.listen(PORT, () => {

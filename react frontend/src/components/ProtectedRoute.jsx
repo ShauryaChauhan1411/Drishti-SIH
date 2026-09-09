@@ -8,10 +8,12 @@ export default function ProtectedRoute({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  console.log("AUTH CHECK START:", new Date().toLocaleTimeString());
+  let authResolved = false;
 
   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    console.log("AUTH CHECK FINISHED:", new Date().toLocaleTimeString(), currentUser);
+    if (authResolved) return;
+
+    authResolved = true;
 
     if (
       currentUser &&
@@ -25,7 +27,18 @@ export default function ProtectedRoute({ children }) {
     setLoading(false);
   });
 
-  return () => unsubscribe();
+  const timeout = setTimeout(() => {
+    if (!authResolved) {
+      authResolved = true;
+      setUser(auth.currentUser);
+      setLoading(false);
+    }
+  }, 5000);
+
+  return () => {
+    clearTimeout(timeout);
+    unsubscribe();
+  };
 }, []);
 
  if (loading) {

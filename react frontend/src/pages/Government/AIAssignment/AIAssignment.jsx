@@ -120,6 +120,27 @@ function AIAssignment() {
   loadTeams();
 }, []);
 
+useEffect(() => {
+  const loadRandomAllotments = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5050/api/allotment/random"
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch random allotments");
+      }
+
+      const data = await response.json();
+      setRandomAllotments(data);
+    } catch (error) {
+      console.error("Failed to load random allotments:", error);
+    }
+  };
+
+  loadRandomAllotments();
+}, []);
+
   // =====================================================
   // STATE
   // =====================================================
@@ -133,6 +154,8 @@ function AIAssignment() {
   const [assignment, setAssignment] = useState(null);
   const [assignmentHistory, setAssignmentHistory] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [randomAllotments, setRandomAllotments] = useState([]);
+const [isAllotting, setIsAllotting] = useState(false);
 
   useEffect(() => {
   const loadProjects = async () => {
@@ -157,14 +180,15 @@ function AIAssignment() {
   project.district ||
   project.state ||
   "Delhi",
-        risk: Number(project.risk_score || project.risk || 0),
-        level:
-          project.risk_category ||
-          (Number(project.risk_score || project.risk || 0) >= 75
-            ? "HIGH"
-            : Number(project.risk_score || project.risk || 0) >= 50
-            ? "MEDIUM"
-            : "LOW"),
+      risk: Number(project.risk_score || 0) * 100,
+
+level: project.risk_category
+  ? project.risk_category.toUpperCase()
+  : Number(project.risk_score || 0) >= 0.75
+  ? "HIGH"
+  : Number(project.risk_score || 0) >= 0.5
+  ? "MEDIUM"
+  : "LOW",
         attendance: project.attendance || "Attendance data available",
         compliance: project.compliance || "Compliance review required",
         lastInspection: project.last_inspection || "Not available",
@@ -312,6 +336,32 @@ console.log(
   });
   };
 
+  const runRandomAllotment = async () => {
+  setIsAllotting(true);
+
+  try {
+    const response = await fetch(
+      "http://localhost:5050/api/allotment/random",
+      {
+        method: "POST",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to run random allotment");
+    }
+
+    const data = await response.json();
+
+    setRandomAllotments(data.assignments || []);
+  } catch (error) {
+    console.error("Random allotment failed:", error);
+    alert("Failed to run random allotment.");
+  } finally {
+    setIsAllotting(false);
+  }
+};
+
   // =====================================================
   // RESET
   // =====================================================
@@ -386,10 +436,10 @@ console.log(
           <div>
             <span>High Risk</span>
             <strong>
-              {projects.filter(
-                (p) => p.level === "HIGH"
-              ).length}
-            </strong>
+  {projects.filter(
+    (p) => p.level === "HIGH" || p.level === "CRITICAL"
+  ).length}
+</strong>
           </div>
         </div>
 
@@ -427,13 +477,119 @@ console.log(
           <div>
             <span>Generated</span>
             <strong>
-              {assignmentHistory.length}
-            </strong>
+  {randomAllotments.length}
+</strong>
           </div>
         </div>
 
       </div>
 
+              {/* RANDOM PMU ALLOTMENT */}
+<section
+  className="engine-card"
+  style={{
+    marginBottom: "24px",
+  }}
+>
+  <div className="engine-card-heading">
+    <div>
+      <span>RANDOMIZED PMU ALLOTMENT</span>
+      <h2>Random Allotment</h2>
+      <p>
+        Randomly assign eligible projects to available PMU teams.
+      </p>
+    </div>
+
+    <Users size={22} />
+  </div>
+
+  <button
+    className="generate-button"
+    onClick={runRandomAllotment}
+    disabled={isAllotting}
+  >
+    <RefreshCw size={17} />
+    {isAllotting ? "Allotting..." : "Run Random Allotment"}
+  </button>
+
+  {randomAllotments.length > 0 && (
+    <div style={{ marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "24px",
+          marginBottom: "16px",
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <strong>{randomAllotments.length}</strong>
+          <div>Projects Allotted</div>
+        </div>
+
+        <div>
+          <strong>{projects.length - randomAllotments.length}</strong>
+          <div>Pending</div>
+        </div>
+
+        <div>
+          <strong>{projects.length}</strong>
+          <div>Total Projects</div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          maxHeight: "320px",
+          overflowY: "auto",
+          border: "1px solid #e5e7eb",
+          borderRadius: "10px",
+        }}
+      >
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={{ padding: "10px", textAlign: "left" }}>
+                Project
+              </th>
+              <th style={{ padding: "10px", textAlign: "left" }}>
+                District
+              </th>
+              <th style={{ padding: "10px", textAlign: "left" }}>
+                PMU Team
+              </th>
+              <th style={{ padding: "10px", textAlign: "left" }}>
+                Status
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {randomAllotments.map((item) => (
+              <tr key={item.project_id}>
+                <td style={{ padding: "10px" }}>
+                  {item.project_id}
+                </td>
+
+                <td style={{ padding: "10px" }}>
+                  {item.project_district || "—"}
+                </td>
+
+                <td style={{ padding: "10px" }}>
+                  {item.assigned_team_name}
+                </td>
+
+                <td style={{ padding: "10px" }}>
+                  {item.status}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )}
+</section>
 
       {/* =================================================
           MAIN ENGINE
